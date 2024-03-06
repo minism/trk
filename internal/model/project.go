@@ -15,3 +15,7 @@ func (p *Project) ID() string {
 	id = strings.Join(strings.Fields(id), "-")
 	return id
 }
+
+func (p *Project) WorkLogPath() string {
+	return config.GetProjectWorkLogPath(p.ID())
+}

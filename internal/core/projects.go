@@ -8,12 +8,12 @@ import (
 )
 
 func GetAllProjects() ([]model.Project, error) {
-	projects := []model.Project{}
 	cfg, err := storage.LoadConfig()
 	if err != nil {
-		return projects, err
+		return nil, err
 	}
 
+	projects := []model.Project{}
 	for _, cfgProject := range cfg.Projects {
 		projects = append(projects, model.Project{ProjectConfig: cfgProject})
 	}
@@ -32,4 +32,9 @@ func GetProjectById(id string) (model.Project, error) {
 		}
 	}
 	return model.Project{}, fmt.Errorf("%w: %s", ErrProjectNotFound, id)
+}
+
+func ValidateProjectId(id string) error {
+	_, err := GetProjectById(id)
+	return err
 }

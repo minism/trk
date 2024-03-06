@@ -13,11 +13,11 @@ import (
 func InitTrk(forceReset bool) (bool, error) {
 	initialized := false
 
-	// Ensure the app directory exists.
-	appDir := config.GetUserAppDir()
-	_, err := os.Stat(appDir)
+	// Ensure the app+logs directory exists.
+	worklogDir := config.GetWorkLogDir()
+	_, err := os.Stat(worklogDir)
 	if os.IsNotExist(err) {
-		err := os.MkdirAll(appDir, os.ModePerm)
+		err := os.MkdirAll(worklogDir, os.ModePerm)
 		if err != nil {
 			return initialized, err
 		}
