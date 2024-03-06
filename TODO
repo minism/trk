@@ -1,5 +1,7 @@
 - CLI structure
 
+  - trk init
+    - Creates configuration
   - trk projects
     - Lists project summaries
   - trk add/set/clear
