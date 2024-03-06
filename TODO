@@ -1,0 +1,35 @@
+- CLI structure
+
+  - trk projects
+    - Lists project summaries
+  - trk add/set/clear
+    - Writes, updates or removes time tracking entries
+    - trk add tripsight 4: Add 4 hours to tripsight project for today
+    - trk add tripsight 2: Add 2 more hours for today
+      - Output: 6 total
+    - trk set tripsight 5: Re-write the hours of today to be 5 total?
+    - trk add starark 2 -m "Did some stuff": Log entry with note
+    - trk set starark 4 --yesterday: Something like this, human readable, days ago, last week, explicit date, defaults to today
+      - Output: 4 total
+    - trk add starark 2 --yesterday
+      - Output: 6 total (because it was an add)
+    - trk clear starark: Clear the starark hours for today, could be reset instead
+  - trk log
+    - Show a log of hours
+      - Could be formatted like spreadsheet with different options, will need to play with this
+    - By default, all projects, or per project
+    - trk log tripsight: Logs just for tripsight
+  - trk invoice
+    - trk invoice list
+      - Lists invoices and statuses
+  - trk report
+    - Generate other reports
+
+- Configuration structure
+  - Project
+    - Name (implies id)
+    - Description
+    - Start date
+    - End date (optional)
+    - Invoicing interval
+    - Default rate
