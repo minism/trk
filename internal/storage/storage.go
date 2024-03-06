@@ -77,8 +77,8 @@ func LoadProjectLogEntries(project model.Project) ([]model.LogEntry, error) {
 
 // For now this is destructive, we will need to consider mutex things for
 // the TUI or just multiple async commands.
-func SaveProjectLogEntries(project model.Project, entries []model.LogEntry) error {
-	file, err := os.Create(project.WorkLogPath())
+func SaveProjectLogEntries(projectId string, entries []model.LogEntry) error {
+	file, err := os.Create(config.GetProjectWorkLogPath(projectId))
 	if err != nil {
 		return err
 	}
