@@ -6,7 +6,8 @@ import (
 
 var (
 	ColorSuccess     = color.New(color.FgGreen).SprintfFunc()
-	ColorProject     = color.New(color.FgGreen).SprintfFunc()
-	ColorTableHeader = color.New(color.FgCyan, color.Underline).SprintfFunc()
 	ColorError       = color.New(color.FgRed).SprintfFunc()
+	ColorDate        = color.New(color.FgCyan).SprintfFunc()
+	ColorProject     = color.New(color.FgYellow).SprintfFunc()
+	ColorTableHeader = color.New(color.FgCyan, color.Underline).SprintfFunc()
 )

@@ -18,7 +18,7 @@ var projectsCmd = &cobra.Command{
 	Use:   "projects",
 	Short: "Lists all projects",
 	Run: func(cmd *cobra.Command, args []string) {
-		projects, err := core.GetProjects()
+		projects, err := core.GetAllProjects()
 		if err != nil {
 			log.Fatal(err)
 		}
