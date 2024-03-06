@@ -29,7 +29,7 @@ var projectsCmd = &cobra.Command{
 			tbl.AddRow(p.ID(), p.Name, display.ReadableMoney(p.HourlyRate))
 		}
 
-		fmt.Println("All projects:\n")
+		fmt.Printf("All projects:\n\n")
 		tbl.Print()
 	},
 }
