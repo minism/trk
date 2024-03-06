@@ -26,7 +26,7 @@ var projectsCmd = &cobra.Command{
 		tbl := table.New("id", "name", "hourly rate")
 		tbl.WithFirstColumnFormatter(display.ColorProject)
 		for _, p := range projects {
-			tbl.AddRow(p.Name, p.Name, p.HourlyRate)
+			tbl.AddRow(p.ID(), p.Name, p.HourlyRate)
 		}
 
 		fmt.Println("All projects:\n")

@@ -1,14 +1,20 @@
 package core
 
 import (
-	"github.com/minism/trk/internal/config"
+	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/storage"
 )
 
-func GetProjects() ([]config.ProjectConfig, error) {
+func GetProjects() ([]model.Project, error) {
+	projects := []model.Project{}
 	cfg, err := storage.LoadConfig()
 	if err != nil {
-		return []config.ProjectConfig{}, err
+		return projects, err
 	}
-	return cfg.Projects, nil
+
+	for _, cfgProject := range cfg.Projects {
+		projects = append(projects, model.Project{ProjectConfig: cfgProject})
+	}
+
+	return projects, nil
 }
