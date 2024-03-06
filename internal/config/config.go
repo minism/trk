@@ -5,5 +5,6 @@ type TrkConfig struct {
 }
 
 type ProjectConfig struct {
-	Name string `yaml:"name"`
+	Name       string  `yaml:"name"`
+	HourlyRate float32 `yaml:"hourly_rate"`
 }

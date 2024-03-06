@@ -10,7 +10,7 @@ import (
 // Tries to initialize trk for the current user.
 // Returns true if successful, or false if it already exists.
 // Returns an error if trk couldn't be initialized for some reason.
-func InitTrk() (bool, error) {
+func InitTrk(forceReset bool) (bool, error) {
 	initialized := false
 
 	// Ensure the app directory exists.
@@ -28,7 +28,7 @@ func InitTrk() (bool, error) {
 	// Ensure the config exists.
 	configPath := config.GetConfigPath()
 	_, err = os.Stat(configPath)
-	if os.IsNotExist(err) {
+	if os.IsNotExist(err) || forceReset {
 		err = writeDefaultConfig()
 		if err != nil {
 			return initialized, err
@@ -43,5 +43,12 @@ func InitTrk() (bool, error) {
 
 func writeDefaultConfig() error {
 	// TODO: When should we use pointers for these?
-	return storage.SaveConfig(config.TrkConfig{})
+	return storage.SaveConfig(config.TrkConfig{
+		Projects: []config.ProjectConfig{
+			{
+				Name:       "Example project",
+				HourlyRate: 50,
+			},
+		},
+	})
 }
