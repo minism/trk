@@ -35,6 +35,16 @@ func FilterLogEntriesByDay(entries []model.LogEntry, date time.Time) []model.Log
 	return matches
 }
 
+func FilterLogEntriesSince(entries []model.LogEntry, since time.Time) []model.LogEntry {
+	matches := make([]model.LogEntry, 0)
+	for _, entry := range entries {
+		if entry.Date.After(since) || entry.Date.Equal(since) {
+			matches = append(matches, entry)
+		}
+	}
+	return matches
+}
+
 func SortLogEntries(entries []model.LogEntry) {
 	sort.SliceStable(entries, func(i, j int) bool {
 		return entries[i].Date.Before(entries[j].Date)

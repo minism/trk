@@ -5,11 +5,13 @@ package cmd
 
 import (
 	"log"
+	"time"
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
 	"github.com/minism/trk/internal/model"
 	"github.com/spf13/cobra"
+	"github.com/tj/go-naturaldate"
 )
 
 var (
@@ -23,6 +25,19 @@ func run(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
+	// Flag parsing.
+	since := time.Unix(0, 0)
+	if len(flagSince) > 0 {
+		// TODO: This still doesn't handle a lot of cases we want, like:
+		// . feb -> februrary
+		// . 2024-02-15
+		since, err = naturaldate.Parse(flagSince, time.Now().UTC())
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Filtering since %s", since)
+	}
+
 	// Optionally filter by a single project.
 	if flagProject != "" {
 		project, err := core.FilterProjectsByIdFuzzy(projects, flagProject)
@@ -33,10 +48,15 @@ func run(cmd *cobra.Command, args []string) {
 		projects = []model.Project{project}
 	}
 
+	// Fetch entries.
 	entries, err := core.RetrieveMergedLogEntries(projects)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Apply any other filters.
+	entries = core.FilterLogEntriesSince(entries, since)
+
 	display.PrintLogEntryTable(entries)
 }
 
@@ -49,5 +69,5 @@ var logCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(logCmd)
 	logCmd.Flags().StringVarP(&flagProject, "project", "p", "", "Filter by a particular project ID (fuzzy match).")
-	logCmd.Flags().StringVar(&flagProject, "since", "", "Only show logs since the given date")
+	logCmd.Flags().StringVar(&flagSince, "since", "", "Only show logs since the given date")
 }
