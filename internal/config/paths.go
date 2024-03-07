@@ -15,7 +15,7 @@ func GetWorkLogDir() string {
 }
 
 func GetProjectWorkLogPath(projectId string) string {
-	return path.Join(GetWorkLogDir(), fmt.Sprintf("%s.yaml", projectId))
+	return path.Join(GetWorkLogDir(), fmt.Sprintf("%s.csv", projectId))
 }
 
 // The directory all trk's application data is located for the current user.

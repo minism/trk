@@ -14,7 +14,7 @@ import (
 
 const (
 	logEntryDateFormat = "2006-01-02"
-	csvDelimeter       = ' '
+	csvDelimeter       = ','
 )
 
 func SaveConfig(cfg config.TrkConfig) error {

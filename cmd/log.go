@@ -21,7 +21,7 @@ var (
 // logCmd represents the log command
 var logCmd = &cobra.Command{
 	Use:   "log",
-	Short: "A brief description of your command",
+	Short: "Display a summary of the work log",
 	Run: func(cmd *cobra.Command, args []string) {
 		projects, err := core.GetAllProjects()
 		if err != nil {
@@ -39,7 +39,7 @@ var logCmd = &cobra.Command{
 		}
 
 		for _, p := range projects {
-			fmt.Printf("Project %s\n", display.ColorProject(p.ID()))
+			fmt.Printf("Project: %s\n", display.ColorProject(p.Name))
 			tbl := table.New("Date", "Hours", "Note")
 			tbl.WithFirstColumnFormatter(display.ColorDate)
 			entries, err := core.RetrieveLogEntries(p.ID())
@@ -52,7 +52,7 @@ var logCmd = &cobra.Command{
 					note = entry.Note
 				}
 				tbl.AddRow(
-					display.ReadableDateWithoutColor(entry.Date), entry.Hours, note)
+					entry.Date.Format("2006-01-02"), entry.Hours, note)
 			}
 			tbl.Print()
 			fmt.Println()
