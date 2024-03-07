@@ -4,8 +4,10 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -23,14 +25,31 @@ var addCmd = &cobra.Command{
 	Use:   "add <project> <num_hours>",
 	Short: "Adds time tracking hours to a project",
 	Run: func(cmd *cobra.Command, args []string) {
-		projectId := args[0]
+		// Match project.
+		projects, err := core.GetAllProjects()
+		if err != nil {
+			log.Fatal(err)
+		}
+		project, err := core.FilterProjectsByIdFuzzy(projects, args[0])
+		if err != nil {
+			log.Println(err)
+			if errors.Is(err, core.ErrMultipleProjectsMatched) {
+				printAllProjects(projects)
+			}
+			os.Exit(1)
+		}
+
+		// Parse hours.
 		hours, err := strconv.ParseFloat(args[1], 64)
 		if err != nil {
 			log.Fatal("Invalid hours value: ", err)
 		}
 
+		// Parse date.
 		date := time.Now()
-		entry, err := core.MakeValidLogEntry(projectId, date, hours, flagMessage)
+
+		// Write.
+		entry, err := core.MakeLogEntry(project, date, hours, flagMessage)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -42,7 +61,7 @@ var addCmd = &cobra.Command{
 		fmt.Printf(
 			"%s to project %s on %s\n",
 			display.ColorSuccess("Logged %.2f hours", hours),
-			display.ColorProject(projectId),
+			display.ColorProject(project.ID()),
 			display.ReadableDate(date))
 	},
 }

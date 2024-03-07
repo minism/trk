@@ -8,11 +8,7 @@ import (
 	"github.com/minism/trk/internal/storage"
 )
 
-func MakeValidLogEntry(projectId string, date time.Time, hours float64, note string) (model.LogEntry, error) {
-	project, err := GetProjectById(projectId)
-	if err != nil {
-		return model.LogEntry{}, err
-	}
+func MakeLogEntry(project model.Project, date time.Time, hours float64, note string) (model.LogEntry, error) {
 	return model.LogEntry{
 		ProjectId: project.ID(),
 		Date:      date,
