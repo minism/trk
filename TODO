@@ -35,3 +35,6 @@
     - End date (optional)
     - Invoicing interval
     - Default rate
+
+- TODOs
+  - Trk log should print tables by week
