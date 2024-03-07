@@ -10,8 +10,8 @@ import (
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
 	"github.com/minism/trk/internal/model"
+	"github.com/minism/trk/internal/util"
 	"github.com/spf13/cobra"
-	"github.com/tj/go-naturaldate"
 )
 
 var (
@@ -29,10 +29,7 @@ func run(cmd *cobra.Command, args []string) {
 	// Flag parsing.
 	since := time.Unix(0, 0)
 	if len(flagSince) > 0 {
-		// TODO: This still doesn't handle a lot of cases we want, like:
-		// . feb -> februrary
-		// . 2024-02-15
-		since, err = naturaldate.Parse(flagSince, time.Now().UTC())
+		since, err = util.ParseNaturalDate(flagSince)
 		if err != nil {
 			log.Fatal(err)
 		}

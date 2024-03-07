@@ -9,15 +9,16 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/util"
 	"github.com/spf13/cobra"
 )
 
 var (
 	flagMessage string
+	flagDate    string
 	flagReplace bool
 )
 
@@ -26,6 +27,18 @@ var addCmd = &cobra.Command{
 	Use:   "add <project> <num_hours>",
 	Short: "Adds time tracking hours to a project",
 	Run: func(cmd *cobra.Command, args []string) {
+		var err error
+
+		// Parse date.
+		// TODO: Revisit timezone stuff.
+		date := util.UtcToday()
+		if len(flagDate) > 0 {
+			date, err = util.ParseNaturalDate(flagDate)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
 		// Match project.
 		projects, err := core.GetAllProjects()
 		if err != nil {
@@ -46,28 +59,34 @@ var addCmd = &cobra.Command{
 			log.Fatal("Invalid hours value: ", err)
 		}
 
-		// Parse date.
-		date := time.Now()
-
 		// Update log entry.
 		entry, err := core.MakeLogEntry(project, date, hours, flagMessage)
 		if err != nil {
 			log.Fatal(err)
 		}
-		allEntries, err := core.AppendLogEntry(entry, flagReplace)
+		allDayEntries, err := core.AppendLogEntry(entry, flagReplace)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// Display change and total.
-		fmt.Printf(
-			"Logged %s to project %s\n",
-			display.ReadableHours(hours),
-			display.ColorProject(project.ID()))
-		fmt.Printf(
-			"\nYou have %s total for %s\n",
-			display.ReadableHours(core.GetTotalHours(allEntries)),
-			display.ReadableDate(date))
+		total := core.GetTotalHours(allDayEntries)
+		if total == hours {
+			fmt.Printf(
+				"Logged %s to project %s for %s\n",
+				display.ReadableHours(hours),
+				display.ColorProject(project.ID()),
+				display.ReadableDate(date))
+		} else {
+			fmt.Printf(
+				"Logged %s to project %s\n",
+				display.ReadableHours(hours),
+				display.ColorProject(project.ID()))
+			fmt.Printf(
+				"\nYou have %s total for %s\n",
+				display.ReadableHours(total),
+				display.ReadableDate(date))
+		}
 	},
 }
 
@@ -92,6 +111,7 @@ func init() {
 	// Add flags to both commands, make set an alias with an override.
 	for _, cmd := range []*cobra.Command{addCmd, setCmd} {
 		cmd.Args = cobra.ExactArgs(2)
+		cmd.Flags().StringVarP(&flagDate, "date", "d", "", "Update log for the given day, default to today.")
 		cmd.Flags().StringVarP(&flagMessage, "message", "m", "", "Provide a message along with the entry.")
 		cmd.Flags().BoolVar(&flagReplace, "replace", false, "Replaces all previous entries for that day.")
 	}

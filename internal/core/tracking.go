@@ -38,11 +38,11 @@ func RetrieveMergedLogEntries(projects []model.Project) ([]model.LogEntry, error
 	// Sort by time.
 	SortLogEntries(entries)
 
-	// Merge entries for the same day.
+	// Merge entries for the same day and project.
 	ret := make([]model.LogEntry, 0)
 	last := model.LogEntry{Date: time.Unix(0, 0)}
 	for _, entry := range entries {
-		if !last.Date.Equal(entry.Date) {
+		if !last.Date.Equal(entry.Date) || last.Project != entry.Project {
 			if last.Hours > 0 {
 				ret = append(ret, last)
 			}
@@ -64,20 +64,25 @@ func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.Log
 		return nil, err
 	}
 
-	if erasePreviousForDay {
-		// If set, remove entries that match the date of the passed-in entry.
-		filteredEntries := make([]model.LogEntry, 0)
-		for _, e := range entries {
-			if !util.IsSameDay(e.Date, entry.Date) {
-				filteredEntries = append(filteredEntries, e)
-			}
+	// Partition entries by whether they're for the given day.
+	entriesForDay := make([]model.LogEntry, 0)
+	otherEntries := make([]model.LogEntry, 0)
+	for _, e := range entries {
+		if util.IsSameDay(e.Date, entry.Date) {
+			entriesForDay = append(entriesForDay, e)
+		} else {
+			otherEntries = append(otherEntries, e)
 		}
-		entries = filteredEntries
 	}
 
 	// Validate the hour total.
-	if entry.Hours+GetTotalHours(entries) > 24 {
+	if entry.Hours+GetTotalHours(entriesForDay) > 24 {
 		return nil, ErrHoursExceedsLimit
+	}
+
+	// If set, remove entries that match the date of the passed-in entry.
+	if erasePreviousForDay {
+		entries = otherEntries
 	}
 
 	// Just append, for now we don't care about order.
