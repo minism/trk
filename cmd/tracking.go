@@ -48,20 +48,24 @@ var addCmd = &cobra.Command{
 		// Parse date.
 		date := time.Now()
 
-		// Write.
+		// Update log entry.
 		entry, err := core.MakeLogEntry(project, date, hours, flagMessage)
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = core.AppendLogEntry(entry)
+		allEntries, err := core.AppendLogEntry(entry)
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// Display change and total.
 		fmt.Printf(
-			"%s to project %s on %s\n",
-			display.ColorSuccess("Logged %.2f hours", hours),
-			display.ColorProject(project.ID()),
+			"Logged %s to project %s\n",
+			display.ReadableHours(hours),
+			display.ColorProject(project.ID()))
+		fmt.Printf(
+			"\nYou have %s total for %s\n",
+			display.ReadableHours(core.GetTotalHours(allEntries)),
 			display.ReadableDate(date))
 	},
 }

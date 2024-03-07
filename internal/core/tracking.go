@@ -37,10 +37,11 @@ func RetrieveLogEntries(projectId string) ([]model.LogEntry, error) {
 }
 
 // Appends the given log entry to storage.
-func AppendLogEntry(entry model.LogEntry) error {
+// Returns all entries for the day.
+func AppendLogEntry(entry model.LogEntry) ([]model.LogEntry, error) {
 	entries, err := RetrieveLogEntries(entry.ProjectId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Just append, for now we don't care about order.
@@ -49,17 +50,18 @@ func AppendLogEntry(entry model.LogEntry) error {
 	// Write all to storage.
 	err = storage.SaveProjectLogEntries(entry.ProjectId, entries)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return FilterLogEntriesByDay(entries, entry.Date), nil
 }
 
 // Sets the log entry for the given project+day, potentially overwriting any
 // previous ones.
-func SetDayLogEntry(entry model.LogEntry) error {
+// Returns all entries for the day.
+func SetDayLogEntry(entry model.LogEntry) ([]model.LogEntry, error) {
 	entries, err := RetrieveLogEntries(entry.ProjectId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Remove entries that match the date of the passed-in entry.
@@ -77,8 +79,7 @@ func SetDayLogEntry(entry model.LogEntry) error {
 	// Write all to storage.
 	err = storage.SaveProjectLogEntries(entry.ProjectId, entries)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	return nil
+	return []model.LogEntry{entry}, nil
 }
