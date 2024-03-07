@@ -10,7 +10,6 @@ import (
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
 	"github.com/minism/trk/internal/model"
-	"github.com/rodaine/table"
 	"github.com/spf13/cobra"
 )
 
@@ -40,22 +39,11 @@ var logCmd = &cobra.Command{
 
 		for _, p := range projects {
 			fmt.Printf("Project: %s\n", display.ColorProject(p.Name))
-			tbl := table.New("Date", "Hours", "Note")
-			tbl.WithFirstColumnFormatter(display.ColorDate)
 			entries, err := core.RetrieveLogEntries(p.ID())
 			if err != nil {
 				log.Fatal(err)
 			}
-			for _, entry := range entries {
-				note := display.ColorNull("(none)")
-				if len(entry.Note) > 0 {
-					note = entry.Note
-				}
-				tbl.AddRow(
-					entry.Date.Format("2006-01-02"), entry.Hours, note)
-			}
-			tbl.Print()
-			fmt.Println()
+			display.PrintLogEntryTable(entries)
 		}
 	},
 }

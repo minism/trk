@@ -69,6 +69,7 @@ func LoadProjectLogEntries(project model.Project) ([]model.LogEntry, error) {
 		if err != nil {
 			return nil, err
 		}
+		entry.Project = project
 		entries = append(entries, entry)
 	}
 

@@ -12,5 +12,5 @@ var (
 	ColorHours       = color.New(color.FgGreen).SprintfFunc()
 	ColorProject     = color.New(color.FgYellow).SprintfFunc()
 	ColorTableHeader = color.New(color.FgCyan, color.Underline).SprintfFunc()
-	ColorNull        = color.New(color.FgBlack).SprintfFunc()
+	ColorNull        = color.New(color.FgHiBlack).SprintfFunc()
 )

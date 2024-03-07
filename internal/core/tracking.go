@@ -11,10 +11,10 @@ import (
 
 func MakeLogEntry(project model.Project, date time.Time, hours float64, note string) (model.LogEntry, error) {
 	return model.LogEntry{
-		ProjectId: project.ID(),
-		Date:      date,
-		Hours:     hours,
-		Note:      note,
+		Project: project,
+		Date:    date,
+		Hours:   hours,
+		Note:    note,
 	}, nil
 }
 
@@ -40,7 +40,7 @@ func RetrieveLogEntries(projectId string) ([]model.LogEntry, error) {
 // Appends the given log entry to storage.
 // Returns all entries for the day.
 func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.LogEntry, error) {
-	entries, err := RetrieveLogEntries(entry.ProjectId)
+	entries, err := RetrieveLogEntries(entry.Project.ID())
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.Log
 	entries = append(entries, entry)
 
 	// Write all to storage.
-	err = storage.SaveProjectLogEntries(entry.ProjectId, entries)
+	err = storage.SaveProjectLogEntries(entry.Project.ID(), entries)
 	if err != nil {
 		return nil, err
 	}
