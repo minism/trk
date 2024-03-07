@@ -7,7 +7,11 @@ import (
 )
 
 func ReadableDate(date time.Time) string {
-	return ColorDate(date.Format("Monday, January 2"))
+	return ColorDate(ReadableDateWithoutColor(date))
+}
+
+func ReadableDateWithoutColor(date time.Time) string {
+	return date.Format("Monday, January 2")
 }
 
 func ReadableMoney(value float64) string {
