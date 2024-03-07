@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -32,6 +33,12 @@ func FilterLogEntriesByDay(entries []model.LogEntry, date time.Time) []model.Log
 		}
 	}
 	return matches
+}
+
+func SortLogEntries(entries []model.LogEntry) {
+	sort.SliceStable(entries, func(i, j int) bool {
+		return entries[i].Date.Before(entries[j].Date)
+	})
 }
 
 func GetTotalHours(entries []model.LogEntry) float64 {

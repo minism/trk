@@ -19,7 +19,7 @@ func PrintLogEntryTable(entries []model.LogEntry) {
 	tbl.WithFirstColumnFormatter(ColorProject)
 	for _, entry := range entries {
 		tbl.AddRow(
-			entry.Project.Name, (entry.Date.Format("2006-01-02")), entry.Hours, entry.Note)
+			entry.Project.Name, entry.Date.Format("Mon 1/2"), entry.Hours, entry.Note)
 	}
 	tbl.Print()
 	fmt.Println()

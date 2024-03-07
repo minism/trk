@@ -1,7 +1,6 @@
 package core
 
 import (
-	"sort"
 	"time"
 
 	"github.com/minism/trk/internal/model"
@@ -18,29 +17,37 @@ func MakeLogEntry(project model.Project, date time.Time, hours float64, note str
 	}, nil
 }
 
-// Retrieve log entries for the given project and date.
-func RetrieveLogEntries(projectId string) ([]model.LogEntry, error) {
-	project, err := GetProjectById(projectId)
-	if err != nil {
-		return nil, err
+// Retrieve sorted log entries for a given project.
+func RetrieveLogEntries(project model.Project) ([]model.LogEntry, error) {
+	return RetrieveMergedLogEntries([]model.Project{project})
+}
+
+// Retrieve merged and sorted log entries for the given projects.
+func RetrieveMergedLogEntries(projects []model.Project) ([]model.LogEntry, error) {
+	entries := make([]model.LogEntry, 0)
+
+	for _, project := range projects {
+		project, err := GetProjectById(project.ID())
+		if err != nil {
+			return nil, err
+		}
+		projectEntries, err := storage.LoadProjectLogEntries(project)
+		if err != nil {
+			return nil, err
+		}
+		for _, e := range projectEntries {
+			entries = append(entries, e)
+		}
 	}
 
-	entries, err := storage.LoadProjectLogEntries(project)
-	if err != nil {
-		return nil, err
-	}
-
-	sort.SliceStable(entries, func(i, j int) bool {
-		return entries[i].Date.Before(entries[j].Date)
-	})
-
+	SortLogEntries(entries)
 	return entries, nil
 }
 
 // Appends the given log entry to storage.
 // Returns all entries for the day.
 func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.LogEntry, error) {
-	entries, err := RetrieveLogEntries(entry.Project.ID())
+	entries, err := RetrieveLogEntries(entry.Project)
 	if err != nil {
 		return nil, err
 	}
