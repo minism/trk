@@ -26,22 +26,34 @@ func RetrieveLogEntries(project model.Project) ([]model.LogEntry, error) {
 func RetrieveMergedLogEntries(projects []model.Project) ([]model.LogEntry, error) {
 	entries := make([]model.LogEntry, 0)
 
+	// Concatenate all entries.
 	for _, project := range projects {
-		project, err := GetProjectById(project.ID())
-		if err != nil {
-			return nil, err
-		}
 		projectEntries, err := storage.LoadProjectLogEntries(project)
 		if err != nil {
 			return nil, err
 		}
-		for _, e := range projectEntries {
-			entries = append(entries, e)
-		}
+		entries = append(entries, projectEntries...)
 	}
 
+	// Sort by time.
 	SortLogEntries(entries)
-	return entries, nil
+
+	// Merge entries for the same day.
+	ret := make([]model.LogEntry, 0)
+	last := model.LogEntry{Date: time.Unix(0, 0)}
+	for _, entry := range entries {
+		if !last.Date.Equal(entry.Date) {
+			if last.Hours > 0 {
+				ret = append(ret, last)
+			}
+			last = entry
+		} else {
+			last.Hours += +entry.Hours
+		}
+	}
+	ret = append(ret, last)
+
+	return ret, nil
 }
 
 // Appends the given log entry to storage.

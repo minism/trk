@@ -17,6 +17,7 @@ import (
 var (
 	flagProject string
 	flagSince   string
+	flagWeekly  bool
 )
 
 func run(cmd *cobra.Command, args []string) {
@@ -68,6 +69,7 @@ var logCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(logCmd)
+	logCmd.Flags().BoolVarP(&flagWeekly, "weekly", "w", false, "Show weekly as opposed to daily output.")
 	logCmd.Flags().StringVarP(&flagProject, "project", "p", "", "Filter by a particular project ID (fuzzy match).")
 	logCmd.Flags().StringVar(&flagSince, "since", "", "Only show logs since the given date")
 }
