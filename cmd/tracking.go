@@ -18,6 +18,7 @@ import (
 
 var (
 	flagMessage string
+	flagReplace bool
 )
 
 // addCmd represents the add command
@@ -53,7 +54,7 @@ var addCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		allEntries, err := core.AppendLogEntry(entry)
+		allEntries, err := core.AppendLogEntry(entry, flagReplace)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -70,9 +71,28 @@ var addCmd = &cobra.Command{
 	},
 }
 
+// set is just an alias for add with --replace set to true.
+var setCmd = &cobra.Command{
+	Use:   "set <project> <num_hours>",
+	Short: "Sets time tracking hours for a particular day",
+	Long: `Sets time tracking hours for a particular day.
+
+This is an alias for "trk add --replace"
+`,
+	Run: func(cmd *cobra.Command, args []string) {
+		flagReplace = true
+		addCmd.Run(cmd, args)
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(setCmd)
 
-	addCmd.Args = cobra.ExactArgs(2)
-	addCmd.Flags().StringVarP(&flagMessage, "message", "m", "", "Provide a message along with the entry.")
+	// Add flags to both commands, make set an alias with an override.
+	for _, cmd := range []*cobra.Command{addCmd, setCmd} {
+		cmd.Args = cobra.ExactArgs(2)
+		cmd.Flags().StringVarP(&flagMessage, "message", "m", "", "Provide a message along with the entry.")
+		cmd.Flags().BoolVar(&flagReplace, "replace", false, "Replaces all previous entries for that day.")
+	}
 }

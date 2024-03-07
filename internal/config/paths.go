@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"path"
 )
@@ -14,7 +15,7 @@ func GetWorkLogDir() string {
 }
 
 func GetProjectWorkLogPath(projectId string) string {
-	return path.Join(GetWorkLogDir(), projectId)
+	return path.Join(GetWorkLogDir(), fmt.Sprintf("%s.yaml", projectId))
 }
 
 // The directory all trk's application data is located for the current user.
