@@ -48,6 +48,12 @@
     - Shows work log snapshot of the last week for all projects
     - Shows any outstanding/unpaid invoices
     - Shows total hours not yet billed in any invoices
+  - trk git xxx
+    - Passthrough any command to git.
+  - trk push
+    - Alias for trk git push
+  - trk pull
+    - Alias for trk git pull
 
 - Configuration structure
 
