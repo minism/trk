@@ -1,6 +1,6 @@
 # trk
 
-Lightweight time tracking, accounting and invoicing tool for freelancers/contractors
+Lightweight time tracking and invoicing tool for freelancers/contractors
 
 # Goals
 
