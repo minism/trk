@@ -6,6 +6,11 @@ import (
 	"github.com/tj/go-naturaldate"
 )
 
+var (
+	MinDate time.Time = time.Unix(0, 0)
+	MaxDate time.Time = time.Unix(1<<62, 0)
+)
+
 func IsSameDay(date1, date2 time.Time) bool {
 	y1, m1, d1 := date1.Date()
 	y2, m2, d2 := date2.Date()

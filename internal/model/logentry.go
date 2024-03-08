@@ -27,10 +27,10 @@ func FilterLogEntriesByDay(entries []LogEntry, date time.Time) []LogEntry {
 	return matches
 }
 
-func FilterLogEntriesSince(entries []LogEntry, since time.Time) []LogEntry {
+func FilterLogEntriesBetween(entries []LogEntry, from time.Time, to time.Time) []LogEntry {
 	matches := make([]LogEntry, 0)
 	for _, entry := range entries {
-		if entry.Date.After(since) || entry.Date.Equal(since) {
+		if (entry.Date.After(from) || entry.Date.Equal(from)) && entry.Date.Before(to) {
 			matches = append(matches, entry)
 		}
 	}
@@ -88,7 +88,7 @@ func MergeAndSortLogEntries(entries []LogEntry) []LogEntry {
 
 	// Merge entries for the same day and project.
 	ret := make([]LogEntry, 0)
-	last := LogEntry{Date: time.Unix(0, 0)}
+	last := LogEntry{Date: util.MinDate}
 	for _, entry := range entries {
 		if !last.Date.Equal(entry.Date) || last.Project != entry.Project {
 			if last.Hours > 0 {
