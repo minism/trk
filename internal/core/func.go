@@ -73,6 +73,25 @@ func GroupLogEntriesByYearWeek(entries []model.LogEntry) *orderedmap.OrderedMap[
 	return ret
 }
 
+func GroupLogEntriesByBimonthly(entries []model.LogEntry) *orderedmap.OrderedMap[time.Time, []model.LogEntry] {
+	ret := orderedmap.NewOrderedMap[time.Time, []model.LogEntry]()
+	for _, entry := range entries {
+		year, month, day := entry.Date.Date()
+		if day > 15 {
+			day = 16
+		} else {
+			day = 1
+		}
+		key := time.Date(year, month, 0, 0, 0, 0, 0, time.UTC)
+		if val, ok := ret.Get(key); !ok {
+			ret.Set(key, []model.LogEntry{entry})
+		} else {
+			ret.Set(key, append(val, entry))
+		}
+	}
+	return ret
+}
+
 func MergeAndSortLogEntries(entries []model.LogEntry) []model.LogEntry {
 	// Sort by time.
 	SortLogEntries(entries)

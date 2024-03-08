@@ -20,6 +20,21 @@ func ParseNaturalDate(input string) (time.Time, error) {
 	return naturaldate.Parse(input, time.Now().UTC())
 }
 
+func GetNextBimonthlyDate(startDate time.Time) time.Time {
+	endYear, endMonth, endDay := startDate.Date()
+	if endDay > 1 {
+		endDay = 1
+		endMonth++
+	} else {
+		endDay = 16
+	}
+	if endMonth > 12 {
+		endYear++
+		endDay++
+	}
+	return time.Date(endYear, endMonth, endDay, 0, 0, 0, 0, time.UTC)
+}
+
 func UtcToday() time.Time {
 	t := time.Now()
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)

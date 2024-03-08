@@ -15,8 +15,9 @@ import (
 
 // projectsCmd represents the projects command
 var projectsCmd = &cobra.Command{
-	Use:   "projects",
-	Short: "Lists all projects",
+	Use:     "project",
+	Aliases: []string{"projects"},
+	Short:   "View and manage projects",
 	Run: func(cmd *cobra.Command, args []string) {
 		projects, err := core.GetAllProjects()
 		if err != nil {
