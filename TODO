@@ -1,6 +1,7 @@
 P0 CLI
 
   trk init: Create config
+  trk version: Show version info
 
   trk project: List projects, summarize config
 
