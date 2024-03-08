@@ -14,8 +14,16 @@ func GetWorkLogDir() string {
 	return path.Join(GetUserAppDir(), "worklog")
 }
 
+func GetInvoicesDir() string {
+	return path.Join(GetUserAppDir(), "invoices")
+}
+
 func GetProjectWorkLogPath(projectId string) string {
 	return path.Join(GetWorkLogDir(), fmt.Sprintf("%s.csv", projectId))
+}
+
+func GetProjectInvoicesPath(projectId string) string {
+	return path.Join(GetInvoicesDir(), fmt.Sprintf("%s_invoices.yaml", projectId))
 }
 
 // The directory all trk's application data is located for the current user.

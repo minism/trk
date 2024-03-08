@@ -19,3 +19,7 @@ func (p *Project) ID() string {
 func (p *Project) WorkLogPath() string {
 	return config.GetProjectWorkLogPath(p.ID())
 }
+
+func (p *Project) InvoicesPath() string {
+	return config.GetProjectInvoicesPath(p.ID())
+}
