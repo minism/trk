@@ -3,16 +3,30 @@ package model
 import "time"
 
 type Invoice struct {
-	Project     Project
-	StartDate   time.Time
-	EndDate     time.Time // Exclusive
-	HoursLogged float64
-	HoursBilled float64
-	HourlyRate  float64
-	IsSent      bool
-	IsPaid      bool
+	Project             Project
+	StartDate           time.Time
+	EndDate             time.Time // Exclusive
+	HoursLogged         float64
+	OverrideHoursBilled float64
+	OverrideHourlyRate  float64
+	IsSent              bool
+	IsPaid              bool
+}
+
+func (i *Invoice) HoursBilled() float64 {
+	if i.OverrideHoursBilled > 0 {
+		return i.OverrideHoursBilled
+	}
+	return i.HoursLogged
+}
+
+func (i *Invoice) HourlyRate() float64 {
+	if i.OverrideHourlyRate > 0 {
+		return i.OverrideHourlyRate
+	}
+	return i.Project.HourlyRate
 }
 
 func (i *Invoice) Total() float64 {
-	return i.HoursBilled * i.HourlyRate
+	return i.HoursBilled() * i.HourlyRate()
 }

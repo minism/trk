@@ -24,8 +24,6 @@ func GenerateInvoicesForProject(project model.Project) ([]model.Invoice, error) 
 			StartDate:   startDate,
 			EndDate:     endDate,
 			HoursLogged: totalHours,
-			HoursBilled: totalHours,
-			HourlyRate:  project.HourlyRate,
 		})
 	}
 	return invoices, nil
