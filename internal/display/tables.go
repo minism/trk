@@ -1,6 +1,8 @@
 package display
 
 import (
+	"time"
+
 	"github.com/elliotchance/orderedmap/v2"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/model"
@@ -24,12 +26,12 @@ func PrintLogEntryTable(entries []model.LogEntry) {
 	tbl.Print()
 }
 
-func PrintWeeklyLogEntryTable(byWeek *orderedmap.OrderedMap[string, []model.LogEntry]) {
+func PrintWeeklyLogEntryTable(byWeek *orderedmap.OrderedMap[time.Time, []model.LogEntry]) {
 	tbl := table.New("Week", "Total Hours")
 	tbl.WithFirstColumnFormatter(ColorDate)
 	for el := byWeek.Front(); el != nil; el = el.Next() {
 		total := core.GetTotalHours(el.Value)
-		tbl.AddRow(el.Key, total)
+		tbl.AddRow(el.Key.Format("Week of 1/2/2006"), total)
 	}
 	tbl.Print()
 }

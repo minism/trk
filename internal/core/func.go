@@ -9,6 +9,7 @@ import (
 	"github.com/elliotchance/orderedmap/v2"
 	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/util"
+	"github.com/snabb/isoweek"
 )
 
 func FilterProjectsByIdFuzzy(projects []model.Project, query string) (model.Project, error) {
@@ -58,11 +59,11 @@ func GroupLogEntriesByProject(entries []model.LogEntry) map[string][]model.LogEn
 	return ret
 }
 
-func GroupLogEntriesByYearWeek(entries []model.LogEntry) *orderedmap.OrderedMap[string, []model.LogEntry] {
-	ret := orderedmap.NewOrderedMap[string, []model.LogEntry]()
+func GroupLogEntriesByYearWeek(entries []model.LogEntry) *orderedmap.OrderedMap[time.Time, []model.LogEntry] {
+	ret := orderedmap.NewOrderedMap[time.Time, []model.LogEntry]()
 	for _, entry := range entries {
 		year, week := entry.Date.ISOWeek()
-		key := fmt.Sprintf("%d-%d", year, week)
+		key := isoweek.StartTime(year, week, time.UTC)
 		if val, ok := ret.Get(key); !ok {
 			ret.Set(key, []model.LogEntry{entry})
 		} else {
