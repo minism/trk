@@ -20,10 +20,10 @@ var (
 	flagDisplayWeekly bool
 )
 
-func run(cmd *cobra.Command, args []string) {
+func runLogCmd(cmd *cobra.Command, args []string) error {
 	projects, err := core.GetAllProjects()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// Flag parsing.
@@ -31,7 +31,7 @@ func run(cmd *cobra.Command, args []string) {
 	if len(flagSince) > 0 {
 		since, err = util.ParseNaturalDate(flagSince)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		log.Printf("Filtering since %s", since)
 	}
@@ -40,8 +40,7 @@ func run(cmd *cobra.Command, args []string) {
 	if flagProject != "" {
 		project, err := core.FilterProjectsByIdFuzzy(projects, flagProject)
 		if err != nil {
-			// TODO: Share the error handling which dumps project IDs here.
-			log.Fatal(err)
+			return err
 		}
 		projects = []model.Project{project}
 	}
@@ -49,7 +48,7 @@ func run(cmd *cobra.Command, args []string) {
 	// Fetch entries.
 	entries, err := core.RetrieveAllLogEntries(projects)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// Apply any other filters.
@@ -68,12 +67,13 @@ func run(cmd *cobra.Command, args []string) {
 		display.PrintLogEntryTable(entries)
 	}
 
+	return nil
 }
 
 var logCmd = &cobra.Command{
 	Use:   "log",
 	Short: "Display a summary of the work log",
-	Run:   run,
+	Run:   wrapCommand(runLogCmd),
 }
 
 func init() {

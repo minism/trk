@@ -4,10 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"errors"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
 
 	"github.com/minism/trk/internal/core"
@@ -23,72 +20,78 @@ var (
 	flagReplace bool
 )
 
+func runAddCmd(cmd *cobra.Command, args []string) error {
+	var err error
+
+	// Parse date.
+	// TODO: Revisit timezone stuff.
+	date := util.UtcToday()
+	if len(flagDate) > 0 {
+		date, err = util.ParseNaturalDate(flagDate)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Match project.
+	projects, err := core.GetAllProjects()
+	if err != nil {
+		return err
+	}
+	project, err := core.FilterProjectsByIdFuzzy(projects, args[0])
+	if err != nil {
+		return err
+	}
+
+	// Parse hours.
+	hours, err := strconv.ParseFloat(args[1], 64)
+	if err != nil {
+		return fmt.Errorf("invalid hours value: %w", err)
+	}
+
+	// Update log entry.
+	entry, err := core.MakeLogEntry(project, date, hours, flagMessage)
+	if err != nil {
+		return err
+	}
+	allDayEntries, err := core.AppendLogEntry(entry, flagReplace)
+	if err != nil {
+		return err
+	}
+
+	// Display change and total.
+	total := model.GetTotalHours(allDayEntries)
+	if total == hours {
+		fmt.Printf(
+			"Logged %s to project %s for %s\n",
+			display.ReadableHours(hours),
+			display.ColorProject(project.ID()),
+			display.ReadableDate(date))
+	} else {
+		fmt.Printf(
+			"Logged %s to project %s\n",
+			display.ReadableHours(hours),
+			display.ColorProject(project.ID()))
+		fmt.Printf(
+			"\nYou have %s total for %s\n",
+			display.ReadableHours(total),
+			display.ReadableDate(date))
+	}
+
+	return nil
+}
+
+func runSetCommand(cmd *cobra.Command, args []string) error {
+	flagReplace = true
+	addCmd.Run(cmd, args)
+	return nil
+}
+
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add <project> <num_hours>",
 	Short: "Adds time tracking hours to a project",
-	Run: func(cmd *cobra.Command, args []string) {
-		var err error
-
-		// Parse date.
-		// TODO: Revisit timezone stuff.
-		date := util.UtcToday()
-		if len(flagDate) > 0 {
-			date, err = util.ParseNaturalDate(flagDate)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-
-		// Match project.
-		projects, err := core.GetAllProjects()
-		if err != nil {
-			log.Fatal(err)
-		}
-		project, err := core.FilterProjectsByIdFuzzy(projects, args[0])
-		if err != nil {
-			log.Println(err)
-			if errors.Is(err, core.ErrMultipleProjectsMatched) {
-				printAllProjects(projects)
-			}
-			os.Exit(1)
-		}
-
-		// Parse hours.
-		hours, err := strconv.ParseFloat(args[1], 64)
-		if err != nil {
-			log.Fatal("Invalid hours value: ", err)
-		}
-
-		// Update log entry.
-		entry, err := core.MakeLogEntry(project, date, hours, flagMessage)
-		if err != nil {
-			log.Fatal(err)
-		}
-		allDayEntries, err := core.AppendLogEntry(entry, flagReplace)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Display change and total.
-		total := model.GetTotalHours(allDayEntries)
-		if total == hours {
-			fmt.Printf(
-				"Logged %s to project %s for %s\n",
-				display.ReadableHours(hours),
-				display.ColorProject(project.ID()),
-				display.ReadableDate(date))
-		} else {
-			fmt.Printf(
-				"Logged %s to project %s\n",
-				display.ReadableHours(hours),
-				display.ColorProject(project.ID()))
-			fmt.Printf(
-				"\nYou have %s total for %s\n",
-				display.ReadableHours(total),
-				display.ReadableDate(date))
-		}
-	},
+	Run:   wrapCommand(runAddCmd),
 }
 
 // set is just an alias for add with --replace set to true.
@@ -99,10 +102,7 @@ var setCmd = &cobra.Command{
 
 This is an alias for "trk add --replace"
 `,
-	Run: func(cmd *cobra.Command, args []string) {
-		flagReplace = true
-		addCmd.Run(cmd, args)
-	},
+	Run: wrapCommand(runSetCommand),
 }
 
 func init() {

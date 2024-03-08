@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
@@ -13,26 +12,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// projectsCmd represents the projects command
+func runProjectCmd(cmd *cobra.Command, args []string) error {
+	projects, err := core.GetAllProjects()
+	if err != nil {
+		return err
+	}
+
+	tbl := table.New("id", "name", "hourly rate")
+	tbl.WithFirstColumnFormatter(display.ColorProject)
+	for _, p := range projects {
+		tbl.AddRow(p.ID(), p.Name, display.ReadableMoney(p.HourlyRate))
+	}
+
+	fmt.Printf("All projects:\n\n")
+	tbl.Print()
+
+	return nil
+}
+
 var projectsCmd = &cobra.Command{
 	Use:     "project",
 	Aliases: []string{"projects"},
 	Short:   "View and manage projects",
-	Run: func(cmd *cobra.Command, args []string) {
-		projects, err := core.GetAllProjects()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		tbl := table.New("id", "name", "hourly rate")
-		tbl.WithFirstColumnFormatter(display.ColorProject)
-		for _, p := range projects {
-			tbl.AddRow(p.ID(), p.Name, display.ReadableMoney(p.HourlyRate))
-		}
-
-		fmt.Printf("All projects:\n\n")
-		tbl.Print()
-	},
+	Run:     wrapCommand(runProjectCmd),
 }
 
 func init() {
