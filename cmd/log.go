@@ -33,6 +33,12 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 	to := util.MaxDate
 	if flagAll || flagDisplayWeekly {
 		from = util.MinDate
+	} else if len(flagDate) > 0 {
+		from, err = util.ParseNaturalDate(flagDate)
+		if err != nil {
+			return err
+		}
+		to = from.Add(time.Duration(24) * time.Hour)
 	} else if len(flagSince) > 0 {
 		from, err = util.ParseNaturalDate(flagSince)
 		if err != nil {
@@ -89,6 +95,7 @@ var logCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(logCmd)
 	logCmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all log history.")
-	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly as opposed to daily output.")
+	logCmd.Flags().StringVarP(&flagDate, "date", "d", "", "Show logs for the given day only.")
 	logCmd.Flags().StringVar(&flagSince, "since", "", "Only show logs since the given date")
+	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly as opposed to daily output.")
 }
