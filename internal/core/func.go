@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/elliotchance/orderedmap/v2"
 	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/util"
 )
@@ -43,6 +44,54 @@ func FilterLogEntriesSince(entries []model.LogEntry, since time.Time) []model.Lo
 		}
 	}
 	return matches
+}
+
+func GroupLogEntriesByProject(entries []model.LogEntry) map[string][]model.LogEntry {
+	ret := make(map[string][]model.LogEntry)
+	for _, entry := range entries {
+		id := entry.Project.ID()
+		if _, ok := ret[id]; !ok {
+			ret[id] = make([]model.LogEntry, 0)
+		}
+		ret[id] = append(ret[id], entry)
+	}
+	return ret
+}
+
+func GroupLogEntriesByYearWeek(entries []model.LogEntry) *orderedmap.OrderedMap[string, []model.LogEntry] {
+	ret := orderedmap.NewOrderedMap[string, []model.LogEntry]()
+	for _, entry := range entries {
+		year, week := entry.Date.ISOWeek()
+		key := fmt.Sprintf("%d-%d", year, week)
+		if val, ok := ret.Get(key); !ok {
+			ret.Set(key, []model.LogEntry{entry})
+		} else {
+			ret.Set(key, append(val, entry))
+		}
+	}
+	return ret
+}
+
+func MergeAndSortLogEntries(entries []model.LogEntry) []model.LogEntry {
+	// Sort by time.
+	SortLogEntries(entries)
+
+	// Merge entries for the same day and project.
+	ret := make([]model.LogEntry, 0)
+	last := model.LogEntry{Date: time.Unix(0, 0)}
+	for _, entry := range entries {
+		if !last.Date.Equal(entry.Date) || last.Project != entry.Project {
+			if last.Hours > 0 {
+				ret = append(ret, last)
+			}
+			last = entry
+		} else {
+			last.Hours += +entry.Hours
+		}
+	}
+	ret = append(ret, last)
+
+	return ret
 }
 
 func SortLogEntries(entries []model.LogEntry) {

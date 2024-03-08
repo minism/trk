@@ -35,6 +35,17 @@
     - End date (optional)
     - Invoicing interval
     - Default rate
+  
+- Command ideas
+  - trk log: By default just shows last 1-2 weeks
+  - trk log -a: Show all, same as --since 1970
+  - trk log -w: Group by week/project
+  - trk log <project> or trk log -p <project> -- need to decide
+    - trk log <project> matches trk add <project>
+    - maybe just both though!
+      - but then -p could be "group by project"
+  
+
 
 - TODOs
   - Trk log should print tables by week

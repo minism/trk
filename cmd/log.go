@@ -4,6 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -15,9 +16,9 @@ import (
 )
 
 var (
-	flagProject string
-	flagSince   string
-	flagWeekly  bool
+	flagProject       string
+	flagSince         string
+	flagDisplayWeekly bool
 )
 
 func run(cmd *cobra.Command, args []string) {
@@ -47,15 +48,27 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	// Fetch entries.
-	entries, err := core.RetrieveMergedLogEntries(projects)
+	entries, err := core.RetrieveAllLogEntries(projects)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Apply any other filters.
+	entries = core.MergeAndSortLogEntries(entries)
 	entries = core.FilterLogEntriesSince(entries, since)
 
-	display.PrintLogEntryTable(entries)
+	if flagDisplayWeekly {
+		byProject := core.GroupLogEntriesByProject(entries)
+		for projectId, entries := range byProject {
+			byWeek := core.GroupLogEntriesByYearWeek(entries)
+			log.Printf("Project: %s\n", display.ColorProject(projectId))
+			display.PrintWeeklyLogEntryTable(byWeek)
+			fmt.Println()
+		}
+	} else {
+		display.PrintLogEntryTable(entries)
+	}
+
 }
 
 var logCmd = &cobra.Command{
@@ -66,7 +79,7 @@ var logCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(logCmd)
-	logCmd.Flags().BoolVarP(&flagWeekly, "weekly", "w", false, "Show weekly as opposed to daily output.")
+	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly as opposed to daily output.")
 	logCmd.Flags().StringVarP(&flagProject, "project", "p", "", "Filter by a particular project ID (fuzzy match).")
 	logCmd.Flags().StringVar(&flagSince, "since", "", "Only show logs since the given date")
 }
