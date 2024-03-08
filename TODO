@@ -1,43 +1,75 @@
 P0 CLI
 
-trk init: Create config
-trk version: Show version info
+  trk init: Create config
+  trk version: Show version info
 
-trk project: List projects, summarize config
+  trk project: List projects, summarize config
 
-trk add: Time tracking, add hours - trk add <project> <hours>: Add time tracking hours to today - trk add <project> <hours> -m message: Adds a note - trk add <project> <hours> -d yesterday: Add hours for different day - trk add <project> <hours> -d 'mar 3': Add hours for different day
+  trk add: Time tracking, add hours
+    - trk add <project> <hours>: Add time tracking hours to today
+    - trk add <project> <hours> -m message: Adds a note
+    - trk add <project> <hours> -d yesterday: Add hours for different day
+    - trk add <project> <hours> -d 'mar 3': Add hours for different day
 
-trk set: Time tracking, set hours - trk set <project> <hours>: Set total time tracking hours for today - trk set <project> <hours> -m message: With a note - trk set <project> <hours> -d yesterday: Set hours for different day - trk set <project> <hours> -d 'mar 3': Set hours for different day
+  trk set: Time tracking, set hours
+    - trk set <project> <hours>: Set total time tracking hours for today
+    - trk set <project> <hours> -m message: With a note
+    - trk set <project> <hours> -d yesterday: Set hours for different day
+    - trk set <project> <hours> -d 'mar 3': Set hours for different day
 
-trk log: Show a log of time tracking entries - trk log: Show recent entries - trk log <project>: Show entries for a specific project - trk log -a: Show all entries - trk log --since 'january': Show entries since given date - trk log -d yesterday: Show entries on a given date - trk log -w: Group entries by week/project - trk log -i: Group entries by invoice period/project
+  trk log: Show a log of time tracking entries
+    - trk log: Show recent entries
+    - trk log <project>: Show entries for a specific project
+    - trk log -a: Show all entries
+    - trk log --since 'january': Show entries since given date
+    - trk log -d yesterday: Show entries on a given date
+    - trk log -w: Group entries by week/project
+    - trk log -i: Group entries by invoice period/project
 
-trk invoice: Manage invoices - trk invoice list: List all invoices and their statuses - trk invoice list -p <project>: List invoices for a project - trk invoice generate: Generate invoices for all work periods that don't have invoices - trk invoice generate -p <project>: Generate invoices for one project - trk invoice generate <invoice_id>: Re-generate an existing invoice, throws warning if sent already. - trk invoice mark-sent <invoice_id>: Mark an invoice as sent to client - trk invoice mark-paid <invoice_id>: Mark an invoice as paid - trk invoice delete <invoice_id>: Deletes an invoice
+  trk invoice: Manage invoices
+    - trk invoice list: List all invoices and their statuses
+    - trk invoice list -p <project>: List invoices for a project
+    - trk invoice generate: Generate invoices for all work periods that don't have invoices
+    - trk invoice generate -p <project>: Generate invoices for one project
+    - trk invoice generate <invoice_id>: Re-generate an existing invoice, throws warning if sent already.
+    - trk invoice mark-sent <invoice_id>: Mark an invoice as sent to client
+    - trk invoice mark-paid <invoice_id>: Mark an invoice as paid
+    - trk invoice delete <invoice_id>: Deletes an invoice
 
-P1 CLI
+P1 CLI 
 
-trk clear: Clear time tracking - trk clear <project>: Clear time tracking hours for today (alias for set 0) - trk clear <project> -d yesterday: Clear hours for different day
+  trk clear: Clear time tracking
+    - trk clear <project>: Clear time tracking hours for today (alias for set 0)
+    - trk clear <project> -d yesterday: Clear hours for different day
 
-trk report: Generate income report - trk report -p: Generate income filtered by project
+  trk report: Generate income report
+    - trk report -p: Generate income filtered by project
 
-trk summary: Show a summary view - trk summary: Shows an overall summary (worklog snapshot, outstanding invoices, uninvoiced hours) - trk summary -p: Show output filtered by project
+  trk summary: Show a summary view
+    - trk summary: Shows an overall summary (worklog snapshot, outstanding invoices, uninvoiced hours) 
+    - trk summary -p: Show output filtered by project
+  
+  trk push/pull: Sync data
+    - trk push: Alias for `git push` on the trk repo
+    - trk pull: Alias for `git pull` on the trk repo
 
 P2 CLI
 
-trk git <command>: Passthrough any command to git - trk git push: Alias for git push - trk git pull: Alias for git pull
-
-trk push/pull: Sync data - trk push: Alias for `git push` on the trk repo - trk pull: Alias for `git pull` on the trk repo
+  trk git <command>: Passthrough any command to git
+    - trk git push: Alias for git push
+    - trk git pull: Alias for git pull
 
 Features
 
-- Invoices should show as dirty or something, when we've generated them but changed the hours.
-  Then you should be able to regenerate an invoice, but if its marked as sent, throw warning.
-- Print invoice yaml location when written
-- Do not allow modification to hours for finalized invoice periods.
-- Do not generate invoices for open periods
+  - Invoices should show as dirty or something, when we've generated them but changed the hours.
+    Then you should be able to regenerate an invoice, but if its marked as sent, throw warning.
+  - Print invoice yaml location when written
+  - Do not allow modification to hours for finalized invoice periods.
+  - Do not generate invoices for open periods
 
 Issues
-
-- Date parsing issues
-  - 3/5 doesnt work but 2024/3/5 does, we can probably try to just add this.
-- Error on incompatible flags
-  - trk log -w --since
+  
+  - Date parsing issues
+    - 3/5 doesnt work but 2024/3/5 does, we can probably try to just add this.
+  - Error on incompatible flags
+    - trk log -w --since
