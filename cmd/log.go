@@ -10,8 +10,8 @@ import (
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
-	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/util"
+	"github.com/minism/trk/pkg/model"
 	"github.com/spf13/cobra"
 )
 

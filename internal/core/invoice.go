@@ -1,9 +1,9 @@
 package core
 
 import (
-	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/storage"
 	"github.com/minism/trk/internal/util"
+	"github.com/minism/trk/pkg/model"
 )
 
 func FetchInvoicesForProject(project model.Project) ([]model.Invoice, error) {

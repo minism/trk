@@ -3,8 +3,8 @@ package core
 import (
 	"fmt"
 
-	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/storage"
+	"github.com/minism/trk/pkg/model"
 )
 
 func GetAllProjects() ([]model.Project, error) {

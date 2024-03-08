@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/minism/trk/internal/model"
+	"github.com/minism/trk/pkg/model"
 )
 
 func FilterProjectsByIdFuzzy(projects []model.Project, query string) (model.Project, error) {

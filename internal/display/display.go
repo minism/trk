@@ -3,7 +3,7 @@ package display
 import (
 	"fmt"
 
-	"github.com/minism/trk/internal/model"
+	"github.com/minism/trk/pkg/model"
 )
 
 // TODO: Move to display

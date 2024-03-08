@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/elliotchance/orderedmap/v2"
-	"github.com/minism/trk/internal/model"
+	"github.com/minism/trk/pkg/model"
 	"github.com/rodaine/table"
 )
 

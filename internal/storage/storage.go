@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/minism/trk/internal/config"
-	"github.com/minism/trk/internal/model"
+	"github.com/minism/trk/pkg/model"
 	"gopkg.in/yaml.v3"
 )
 
