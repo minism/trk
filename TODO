@@ -64,6 +64,8 @@ Features
   - Invoices should show as dirty or something, when we've generated them but changed the hours.
     Then you should be able to regenerate an invoice, but if its marked as sent, throw warning.
   - Print invoice yaml location when written
+  - Do not allow modification to hours for finalized invoice periods.
+  - Do not generate invoices for open periods
 
 Issues
   
