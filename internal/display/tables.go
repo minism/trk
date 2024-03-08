@@ -2,17 +2,22 @@ package display
 
 import (
 	"time"
+	"unicode/utf8"
 
+	"github.com/acarl005/stripansi"
 	"github.com/elliotchance/orderedmap/v2"
 	"github.com/minism/trk/pkg/model"
 	"github.com/rodaine/table"
 )
 
 func init() {
+	table.DefaultPadding = 8
 	table.DefaultHeaderFormatter = func(format string, vals ...interface{}) string {
 		return ColorTableHeader(format, vals...)
 	}
-	table.DefaultPadding = 12
+	table.DefaultWidthFunc = func(s string) int {
+		return utf8.RuneCountInString(stripansi.Strip(s))
+	}
 }
 
 func PrintLogEntryTable(entries []model.LogEntry) {
@@ -20,7 +25,7 @@ func PrintLogEntryTable(entries []model.LogEntry) {
 	tbl.WithFirstColumnFormatter(ColorDate)
 	for _, entry := range entries {
 		tbl.AddRow(
-			entry.Date.Format("Mon 1/2"), ColorProject(entry.Project.Name), entry.Hours, entry.Note)
+			entry.Date.Format("Mon 1/2"), ColorProject(entry.Project.ID()), entry.Hours, entry.Note)
 	}
 	tbl.Print()
 }
@@ -47,10 +52,10 @@ func PrintInvoicePeriodLogEntryTable(byInvoiceDate *orderedmap.OrderedMap[time.T
 }
 
 func PrintInvoicesTable(invoices []model.Invoice) {
-	tbl := table.New("Invoice Date", "Hours Billed", "Rate", "Total", "Sent?", "Paid?")
+	tbl := table.New("Invoice Date", "Hours Billed", "Rate", "Total", "Status")
 	tbl.WithFirstColumnFormatter(ColorDate)
 	for _, invoice := range invoices {
-		tbl.AddRow(invoice.StartDate, invoice.HoursBilled(), invoice.HourlyRate(), ReadableMoney(invoice.Total()), invoice.IsSent, invoice.IsPaid)
+		tbl.AddRow(invoice.StartDate.Format("2006-01-02"), invoice.HoursBilled(), invoice.HourlyRate(), ReadableMoney(invoice.Total()), invoice.Status())
 	}
 	tbl.Print()
 }

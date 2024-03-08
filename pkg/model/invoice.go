@@ -27,6 +27,16 @@ func (i *Invoice) HourlyRate() float64 {
 	return i.Project.HourlyRate
 }
 
+func (i *Invoice) Status() string {
+	if i.IsPaid {
+		return "Paid"
+	} else if i.IsSent {
+		return "Sent"
+	} else {
+		return ""
+	}
+}
+
 func (i *Invoice) Total() float64 {
 	return i.HoursBilled() * i.HourlyRate()
 }
