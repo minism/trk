@@ -49,7 +49,7 @@ func GroupLogEntriesByProject(entries []LogEntry) map[string][]LogEntry {
 	return ret
 }
 
-func GroupLogEntriesByYearWeek(entries []LogEntry) *orderedmap.OrderedMap[time.Time, []LogEntry] {
+func GroupLogEntriesByWeekStart(entries []LogEntry) *orderedmap.OrderedMap[time.Time, []LogEntry] {
 	ret := orderedmap.NewOrderedMap[time.Time, []LogEntry]()
 	for _, entry := range entries {
 		year, week := entry.Date.ISOWeek()

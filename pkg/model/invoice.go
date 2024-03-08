@@ -30,3 +30,12 @@ func (i *Invoice) HourlyRate() float64 {
 func (i *Invoice) Total() float64 {
 	return i.HoursBilled() * i.HourlyRate()
 }
+
+func MaybeFindInvoiceByStartDate(invoices []Invoice, date time.Time) *Invoice {
+	for _, invoice := range invoices {
+		if invoice.StartDate.Equal(date) {
+			return &invoice
+		}
+	}
+	return nil
+}

@@ -16,9 +16,10 @@ import (
 )
 
 var (
-	flagSince         string
-	flagAll           bool
-	flagDisplayWeekly bool
+	flagSince          string
+	flagAll            bool
+	flagDisplayWeekly  bool
+	flagDisplayInvoice bool
 )
 
 func runLogCmd(cmd *cobra.Command, args []string) error {
@@ -29,9 +30,9 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 
 	// Determine date range.
 	// By default we show the last two weeks.
-	from := time.Now().Add(time.Duration(-24*14) * time.Hour)
+	from := util.MinDate
 	to := util.MaxDate
-	if flagAll || flagDisplayWeekly {
+	if flagAll || flagDisplayWeekly || flagDisplayInvoice {
 		from = util.MinDate
 	} else if len(flagDate) > 0 {
 		from, err = util.ParseNaturalDate(flagDate)
@@ -71,11 +72,23 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 
 	// Output format.
 	log.Printf("Showing logs since %s\n", display.ReadableDate(from))
-	if flagDisplayWeekly {
+	if flagDisplayInvoice {
 		byProject := model.GroupLogEntriesByProject(entries)
-		for projectId, entries := range byProject {
-			byWeek := model.GroupLogEntriesByYearWeek(entries)
-			log.Printf("Project: %s\n", display.ColorProject(projectId))
+		for _, project := range projects {
+			log.Printf("Project: %s\n", display.ColorProject(project.Name))
+			invoices, err := core.FetchInvoicesForProject(project)
+			if err != nil {
+				return err
+			}
+			byInvoiceDate := model.GroupLogEntriesByBimonthly(byProject[project.ID()])
+			display.PrintInvoicePeriodLogEntryTable(byInvoiceDate, invoices)
+			fmt.Println()
+		}
+	} else if flagDisplayWeekly {
+		byProject := model.GroupLogEntriesByProject(entries)
+		for _, project := range projects {
+			log.Printf("Project: %s\n", display.ColorProject(project.Name))
+			byWeek := model.GroupLogEntriesByWeekStart(byProject[project.ID()])
 			display.PrintWeeklyLogEntryTable(byWeek)
 			fmt.Println()
 		}
@@ -96,6 +109,7 @@ func init() {
 	rootCmd.AddCommand(logCmd)
 	logCmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all log history.")
 	logCmd.Flags().StringVarP(&flagDate, "date", "d", "", "Show logs for the given day only.")
-	logCmd.Flags().StringVar(&flagSince, "since", "", "Only show logs since the given date")
-	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly as opposed to daily output.")
+	logCmd.Flags().StringVar(&flagSince, "since", "last week", "Only show logs since the given date")
+	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly aggregated logs.")
+	logCmd.Flags().BoolVarP(&flagDisplayInvoice, "invoice", "i", false, "Show invoice-period aggregated logs and related invoice info.")
 }

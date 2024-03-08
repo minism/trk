@@ -35,6 +35,17 @@ func PrintWeeklyLogEntryTable(byWeek *orderedmap.OrderedMap[time.Time, []model.L
 	tbl.Print()
 }
 
+func PrintInvoicePeriodLogEntryTable(byInvoiceDate *orderedmap.OrderedMap[time.Time, []model.LogEntry], invoices []model.Invoice) {
+	tbl := table.New("Start Date", "Total Hours", "Associated invoice")
+
+	for el := byInvoiceDate.Front(); el != nil; el = el.Next() {
+		total := model.GetTotalHours(el.Value)
+		invoice := model.MaybeFindInvoiceByStartDate(invoices, el.Key)
+		tbl.AddRow(el.Key, total, invoice)
+	}
+	tbl.Print()
+}
+
 func PrintInvoicesTable(invoices []model.Invoice) {
 	tbl := table.New("Invoice Date", "Hours Billed", "Rate", "Total", "Sent?", "Paid?")
 	tbl.WithFirstColumnFormatter(ColorDate)
