@@ -1,6 +1,7 @@
 package display
 
 import (
+	"fmt"
 	"time"
 	"unicode/utf8"
 
@@ -32,10 +33,9 @@ func PrintLogEntryTable(entries []model.LogEntry) {
 
 func PrintWeeklyLogEntryTable(byWeek *orderedmap.OrderedMap[time.Time, []model.LogEntry]) {
 	tbl := table.New("Week", "Total Hours")
-	tbl.WithFirstColumnFormatter(ColorDate)
 	for el := byWeek.Front(); el != nil; el = el.Next() {
 		total := model.GetTotalHours(el.Value)
-		tbl.AddRow(el.Key.Format("Week of 1/2/2006"), total)
+		tbl.AddRow(fmt.Sprintf("Week of %s", ColorDate(el.Key.Format("1/2/2006"))), total)
 	}
 	tbl.Print()
 }

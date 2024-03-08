@@ -71,7 +71,7 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 	entries = model.FilterLogEntriesBetween(entries, from, to)
 
 	// Output format.
-	log.Printf("Showing logs since %s\n", display.ReadableDate(from))
+	log.Printf("Showing logs since %s\n\n", display.ReadableDate(from))
 	if flagDisplayInvoice {
 		byProject := model.GroupLogEntriesByProject(entries)
 		for _, project := range projects {
