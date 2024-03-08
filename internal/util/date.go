@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/ijt/go-anytime"
+	"github.com/snabb/isoweek"
 )
 
 var (
@@ -20,6 +21,13 @@ func IsSameDay(date1, date2 time.Time) bool {
 
 func ParseNaturalDate(input string) (time.Time, error) {
 	return anytime.Parse(input, time.Now().UTC(), anytime.DefaultToPast)
+}
+
+func GetStartOfWeek(date time.Time) time.Time {
+	year, week := date.ISOWeek()
+
+	// Subtract 1 day since this library uses monday-based weeks.
+	return isoweek.StartTime(year, week, time.UTC).Add(-time.Duration(24) * time.Hour)
 }
 
 func GetNextBimonthlyDate(startDate time.Time) time.Time {

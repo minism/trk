@@ -71,6 +71,5 @@ Issues
   
   - Date parsing issues
     - 3/5 doesnt work but 2024/3/5 does, we can probably try to just add this.
-  - trk log --since "last week" uses sunday-based weeks, but trk log -w uses "Monday based weeks", can be fixed via offset though.
   - Error on incompatible flags
     - trk log -w --since

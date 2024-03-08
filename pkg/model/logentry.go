@@ -6,7 +6,6 @@ import (
 
 	"github.com/elliotchance/orderedmap/v2"
 	"github.com/minism/trk/internal/util"
-	"github.com/snabb/isoweek"
 )
 
 // Represents hours logged for a particular project for a particular day.
@@ -52,8 +51,7 @@ func GroupLogEntriesByProject(entries []LogEntry) map[string][]LogEntry {
 func GroupLogEntriesByWeekStart(entries []LogEntry) *orderedmap.OrderedMap[time.Time, []LogEntry] {
 	ret := orderedmap.NewOrderedMap[time.Time, []LogEntry]()
 	for _, entry := range entries {
-		year, week := entry.Date.ISOWeek()
-		key := isoweek.StartTime(year, week, time.UTC)
+		key := util.GetStartOfWeek(entry.Date)
 		if val, ok := ret.Get(key); !ok {
 			ret.Set(key, []LogEntry{entry})
 		} else {
