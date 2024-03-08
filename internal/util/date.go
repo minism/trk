@@ -3,7 +3,7 @@ package util
 import (
 	"time"
 
-	"github.com/tj/go-naturaldate"
+	"github.com/ijt/go-anytime"
 )
 
 var (
@@ -19,10 +19,7 @@ func IsSameDay(date1, date2 time.Time) bool {
 }
 
 func ParseNaturalDate(input string) (time.Time, error) {
-	// TODO: This still doesn't handle a lot of cases we want, like:
-	// . feb -> februrary
-	// . 2024-02-15
-	return naturaldate.Parse(input, time.Now().UTC())
+	return anytime.Parse(input, time.Now().UTC(), anytime.DefaultToPast)
 }
 
 func GetNextBimonthlyDate(startDate time.Time) time.Time {

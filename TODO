@@ -68,3 +68,4 @@ Features
 Issues
 
   - Natural date parsing lib sucks, "March 2nd" works but "March 2" doesn't for example.
+  - trk log --since "last week" uses sunday-based weeks, but trk log -w uses "Monday based weeks", can be fixed via offset though.
