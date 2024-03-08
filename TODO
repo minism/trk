@@ -27,25 +27,48 @@
   - trk report
     - Generate other reports
 
+- More command ideas
+
+  - trk log: By default just shows last 30 days
+  - trk log -a: Show all, same as --since 1970
+  - trk log -w: Group by week/project
+  - trk log -i: Group by invoice period / project (bimonthly)
+  - trk log <project> or trk log -p <project> -- need to decide
+    - trk log <project> matches trk add <project>
+    - maybe just both though!
+      - but then -p could be "group by project"
+  - trk invoice list: List all invoices and paid/unpaid status
+    Filter by -p, global command
+  - trk invoice generate: Generate invoices automatically for work periods we haven't yet
+    - Does nothing if every range has already been generated
+    - Outputs invoice yaml file location
+  - trk invoice mark-paid <invoice_id>
+  - trk summary:
+    - CLI "Dashboard view"
+    - Shows work log snapshot of the last week for all projects
+    - Shows any outstanding/unpaid invoices
+    - Shows total hours not yet billed in any invoices
+
 - Configuration structure
+
   - Project
+
     - Name (implies id)
     - Description
     - Start date
     - End date (optional)
     - Invoicing interval
     - Default rate
-  
-- Command ideas
-  - trk log: By default just shows last 1-2 weeks
-  - trk log -a: Show all, same as --since 1970
-  - trk log -w: Group by week/project
-  - trk log <project> or trk log -p <project> -- need to decide
-    - trk log <project> matches trk add <project>
-    - maybe just both though!
-      - but then -p could be "group by project"
-  
 
+  - Invoice structure
+
+    - Project id
+    - Start date
+    - End date (inclusive)
+    - Override hourly rate
+    - Override billed hours (by default uses exact logged hours for range)
+    - Is sent
+    - Is paid
 
 - TODOs
   - Trk log should print tables by week
