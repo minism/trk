@@ -43,6 +43,10 @@
     - Does nothing if every range has already been generated
     - Outputs invoice yaml file location
   - trk invoice mark-paid <invoice_id>
+  - trk report:
+    Show monthly income for invoices, another column for unpaid but logged
+  - trk report -p:
+    Same view just filtered for a project
   - trk summary:
     - CLI "Dashboard view"
     - Shows work log snapshot of the last week for all projects
