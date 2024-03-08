@@ -72,7 +72,7 @@ func GroupLogEntriesByBimonthly(entries []LogEntry) *orderedmap.OrderedMap[time.
 		} else {
 			day = 1
 		}
-		key := time.Date(year, month, 0, 0, 0, 0, 0, time.UTC)
+		key := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 		if val, ok := ret.Get(key); !ok {
 			ret.Set(key, []LogEntry{entry})
 		} else {
