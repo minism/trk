@@ -37,8 +37,12 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	// Optionally filter by a single project.
-	if flagProject != "" {
-		project, err := core.FilterProjectsByIdFuzzy(projects, flagProject)
+	projectFilter := flagProject
+	if len(args) > 0 {
+		projectFilter = args[0]
+	}
+	if projectFilter != "" {
+		project, err := core.FilterProjectsByIdFuzzy(projects, projectFilter)
 		if err != nil {
 			return err
 		}
@@ -71,7 +75,7 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 }
 
 var logCmd = &cobra.Command{
-	Use:   "log",
+	Use:   "log [project]",
 	Short: "Display a summary of the work log",
 	Run:   wrapCommand(runLogCmd),
 }
