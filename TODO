@@ -1,84 +1,69 @@
-- CLI structure
+P0 CLI
 
-  - trk init
-    - Creates configuration
-  - trk projects
-    - Lists project summaries
-  - trk add/set/clear
-    - Writes, updates or removes time tracking entries
-    - trk add tripsight 4: Add 4 hours to tripsight project for today
-    - trk add tripsight 2: Add 2 more hours for today
-      - Output: 6 total
-    - trk set tripsight 5: Re-write the hours of today to be 5 total?
-    - trk add starark 2 -m "Did some stuff": Log entry with note
-    - trk set starark 4 --yesterday: Something like this, human readable, days ago, last week, explicit date, defaults to today
-      - Output: 4 total
-    - trk add starark 2 --yesterday
-      - Output: 6 total (because it was an add)
-    - trk clear starark: Clear the starark hours for today, could be reset instead
-  - trk log
-    - Show a log of hours
-      - Could be formatted like spreadsheet with different options, will need to play with this
-    - By default, all projects, or per project
-    - trk log tripsight: Logs just for tripsight
-  - trk invoice
-    - trk invoice list
-      - Lists invoices and statuses
-  - trk report
-    - Generate other reports
+  trk init: Create config
 
-- More command ideas
+  trk project: List projects, summarize config
 
-  - trk log: By default just shows last 30 days
-  - trk log -a: Show all, same as --since 1970
-  - trk log -w: Group by week/project
-  - trk log -i: Group by invoice period / project (bimonthly)
-  - trk log <project> or trk log -p <project> -- need to decide
-    - trk log <project> matches trk add <project>
-    - maybe just both though!
-      - but then -p could be "group by project"
-  - trk invoice list: List all invoices and paid/unpaid status
-    Filter by -p, global command
-  - trk invoice generate: Generate invoices automatically for work periods we haven't yet
-    - Does nothing if every range has already been generated
-    - Outputs invoice yaml file location
-  - trk invoice mark-paid <invoice_id>
-  - trk report:
-    Show monthly income for invoices, another column for unpaid but logged
-  - trk report -p:
-    Same view just filtered for a project
-  - trk summary:
-    - CLI "Dashboard view"
-    - Shows work log snapshot of the last week for all projects
-    - Shows any outstanding/unpaid invoices
-    - Shows total hours not yet billed in any invoices
-  - trk git xxx
-    - Passthrough any command to git.
-  - trk push
-    - Alias for trk git push
-  - trk pull
-    - Alias for trk git pull
+  trk add: Time tracking, add hours
+    - trk add <project> <hours>: Add time tracking hours to today
+    - trk add <project> <hours> -m message: Adds a note
+    - trk add <project> <hours> -d yesterday: Add hours for different day
+    - trk add <project> <hours> -d 'mar 3': Add hours for different day
 
-- Configuration structure
+  trk set: Time tracking, set hours
+    - trk set <project> <hours>: Set total time tracking hours for today
+    - trk set <project> <hours> -m message: With a note
+    - trk set <project> <hours> -d yesterday: Set hours for different day
+    - trk set <project> <hours> -d 'mar 3': Set hours for different day
 
-  - Project
+  trk log: Show a log of time tracking entries
+    - trk log: Show recent entries
+    - trk log <project>: Show entries for a specific project
+    - trk log -a: Show all entries
+    - trk log --since 'january': Show entries since given date
+    - trk log -d yesterday: Show entries on a given date
+    - trk log -w: Group entries by week/project
+    - trk log -i: Group entries by invoice period/project
 
-    - Name (implies id)
-    - Description
-    - Start date
-    - End date (optional)
-    - Invoicing interval
-    - Default rate
+  trk invoice: Manage invoices
+    - trk invoice list: List all invoices and their statuses
+    - trk invoice list -p <project>: List invoices for a project
+    - trk invoice generate: Generate invoices for all work periods that don't have invoices
+    - trk invoice generate -p <project>: Generate invoices for one project
+    - trk invoice generate <invoice_id>: Re-generate an existing invoice, throws warning if sent already.
+    - trk invoice mark-sent <invoice_id>: Mark an invoice as sent to client
+    - trk invoice mark-paid <invoice_id>: Mark an invoice as paid
+    - trk invoice delete <invoice_id>: Deletes an invoice
 
-  - Invoice structure
+P1 CLI 
 
-    - Project id
-    - Start date
-    - End date (inclusive)
-    - Override hourly rate
-    - Override billed hours (by default uses exact logged hours for range)
-    - Is sent
-    - Is paid
+  trk clear: Clear time tracking
+    - trk clear <project>: Clear time tracking hours for today (alias for set 0)
+    - trk clear <project> -d yesterday: Clear hours for different day
 
-- TODOs
-  - Trk log should print tables by week
+  trk report: Generate income report
+    - trk report -p: Generate income filtered by project
+
+  trk summary: Show a summary view
+    - trk summary: Shows an overall summary (worklog snapshot, outstanding invoices, uninvoiced hours) 
+    - trk summary -p: Show output filtered by project
+  
+  trk push/pull: Sync data
+    - trk push: Alias for `git push` on the trk repo
+    - trk pull: Alias for `git pull` on the trk repo
+
+P2 CLI
+
+  trk git <command>: Passthrough any command to git
+    - trk git push: Alias for git push
+    - trk git pull: Alias for git pull
+
+Features
+
+  - Invoices should show as dirty or something, when we've generated them but changed the hours.
+    Then you should be able to regenerate an invoice, but if its marked as sent, throw warning.
+  - Print invoice yaml location when written
+
+Issues
+
+  - Natural date parsing lib sucks, "March 2nd" works but "March 2" doesn't for example.
