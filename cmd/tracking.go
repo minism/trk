@@ -12,6 +12,7 @@ import (
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/model"
 	"github.com/minism/trk/internal/util"
 	"github.com/spf13/cobra"
 )
@@ -70,7 +71,7 @@ var addCmd = &cobra.Command{
 		}
 
 		// Display change and total.
-		total := core.GetTotalHours(allDayEntries)
+		total := model.GetTotalHours(allDayEntries)
 		if total == hours {
 			fmt.Printf(
 				"Logged %s to project %s for %s\n",

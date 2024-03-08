@@ -54,13 +54,13 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	// Apply any other filters.
-	entries = core.MergeAndSortLogEntries(entries)
-	entries = core.FilterLogEntriesSince(entries, since)
+	entries = model.MergeAndSortLogEntries(entries)
+	entries = model.FilterLogEntriesSince(entries, since)
 
 	if flagDisplayWeekly {
-		byProject := core.GroupLogEntriesByProject(entries)
+		byProject := model.GroupLogEntriesByProject(entries)
 		for projectId, entries := range byProject {
-			byWeek := core.GroupLogEntriesByYearWeek(entries)
+			byWeek := model.GroupLogEntriesByYearWeek(entries)
 			log.Printf("Project: %s\n", display.ColorProject(projectId))
 			display.PrintWeeklyLogEntryTable(byWeek)
 			fmt.Println()

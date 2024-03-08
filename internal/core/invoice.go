@@ -12,12 +12,12 @@ func GenerateInvoicesForProject(project model.Project) ([]model.Invoice, error) 
 	}
 
 	// Assume bimonthly now but we need to support other periods.
-	byStartDate := GroupLogEntriesByBimonthly(entries)
+	byStartDate := model.GroupLogEntriesByBimonthly(entries)
 	invoices := make([]model.Invoice, 0)
 	for el := byStartDate.Front(); el != nil; el = el.Next() {
 		startDate := el.Key
 		endDate := util.GetNextBimonthlyDate(startDate)
-		totalHours := GetTotalHours(el.Value)
+		totalHours := model.GetTotalHours(el.Value)
 
 		invoices = append(invoices, model.Invoice{
 			Project:     project,

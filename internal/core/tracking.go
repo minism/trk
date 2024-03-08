@@ -56,7 +56,7 @@ func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.Log
 	}
 
 	// Validate the hour total.
-	if entry.Hours+GetTotalHours(entriesForDay) > 24 {
+	if entry.Hours+model.GetTotalHours(entriesForDay) > 24 {
 		return nil, ErrHoursExceedsLimit
 	}
 
@@ -73,5 +73,5 @@ func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.Log
 	if err != nil {
 		return nil, err
 	}
-	return FilterLogEntriesByDay(entries, entry.Date), nil
+	return model.FilterLogEntriesByDay(entries, entry.Date), nil
 }
