@@ -1,6 +1,6 @@
 P0 CLI
 
-  trk init: Create config
+  trk init: Create trk data directory and config
   trk version: Show version info
 
   trk project: List projects, summarize config
@@ -61,14 +61,32 @@ P1 CLI
 
 P2 CLI
 
+  trk config: View and edit config
+    - trk config show/print/list: Print the trk config
+    - trk config edit: Edit the trk config in $EDITOR
+
+  trk invoice:
+    - trk invoice render <invoice_id>: Render an invoice to HTML/PDF based on templates.
+
   trk git <command>: Passthrough any command to git
     - trk git push: Alias for git push
     - trk git pull: Alias for git pull
 
+trk data directory structure:
+
+  - ~/.trk
+    - config.yaml : Main config file, has project definitions
+    - worklog/ : Directory for time tracking
+      - project_1_log.csv
+      - project_2_log.csv
+    - invoices/ : Directory for invoices
+      - project_1_invoices.yaml
+      - project_2_invoices.yaml
+
 Features/TODO
 
   - Come up with a better invoice storage format
-    - One idea: yaml file per project with a list of invoices
+    - One idea: yaml file per project with a list of invoices -- this matches how the log works.
     - Another: yaml file per invoice named based on the project + date period (invoice ID is hard)
     - Fields such as hourly rate and hours billed are optional since they can be inferred, but overridden
   - Invoices should show as dirty or something, when we've generated them but changed the hours.
@@ -78,6 +96,10 @@ Features/TODO
     - Warning for sent invoice periods
   - trk invoice list should only show generated invoices
     - but an option -a for 'all' should also show the current/pending invoice?
+  - invoice periods:
+   - monthly,
+   - bimonthly
+   - adhoc/rolling - arbitrary period, when you run `generate` it includes all days since the last invoice.
 
 Issues
 

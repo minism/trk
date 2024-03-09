@@ -42,7 +42,6 @@ func LoadConfig() (config.TrkConfig, error) {
 	return cfg, nil
 }
 
-// TODO: Obviously revisit the scheme here for performance.
 func LoadProjectLogEntries(project model.Project) ([]model.LogEntry, error) {
 	file, err := os.Open(project.WorkLogPath())
 	if err != nil {

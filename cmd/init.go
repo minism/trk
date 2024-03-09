@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/util"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +16,10 @@ var (
 )
 
 func runInitCmd(cmd *cobra.Command, args []string) error {
+	if flagForceReset && !util.AskUserForConfirmation("Are you sure you want to reset the config?") {
+		os.Exit(0)
+	}
+
 	created, err := core.InitTrk(flagForceReset)
 	if err != nil {
 		return err
@@ -35,7 +41,5 @@ var initCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	// TODO: This should require user confirmation.
 	initCmd.Flags().BoolVar(&flagForceReset, "force-reset", false, "Forcibly resets the config.")
 }

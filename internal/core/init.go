@@ -42,7 +42,6 @@ func InitTrk(forceReset bool) (bool, error) {
 }
 
 func writeDefaultConfig() error {
-	// TODO: When should we use pointers for these?
 	return storage.SaveConfig(config.TrkConfig{
 		Projects: []config.ProjectConfig{
 			{
