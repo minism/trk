@@ -97,7 +97,9 @@ func MergeAndSortLogEntries(entries []LogEntry) []LogEntry {
 			last.Hours += +entry.Hours
 		}
 	}
-	ret = append(ret, last)
+	if last.Hours > 0 {
+		ret = append(ret, last)
+	}
 
 	return ret
 }
