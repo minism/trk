@@ -11,4 +11,7 @@ lint:
 clean:
 	-@rm -f ${OUT}
 
-.PHONY: build lint clean 
+license:
+	addlicense -c "Josh Bothun" -l mit -v -y 2024 -s .
+
+.PHONY: build lint clean license
