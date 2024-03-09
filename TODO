@@ -36,19 +36,25 @@ P0 CLI
     - trk invoice mark-paid <invoice_id>: Mark an invoice as paid
     - trk invoice delete <invoice_id>: Deletes an invoice
 
-P1 CLI 
+P1 CLI
 
   trk clear: Clear time tracking
     - trk clear <project>: Clear time tracking hours for today (alias for set 0)
     - trk clear <project> -d yesterday: Clear hours for different day
 
+  trk project: Project management
+    - trk project list: List all projects
+    - trk project create <project>: Create a new project
+    - trk project delete <project>: Delete a project
+    - trk project set-rate <project> <rate>: Set the hourly rate for a project
+
   trk report: Generate income report
     - trk report -p: Generate income filtered by project
 
   trk summary: Show a summary view
-    - trk summary: Shows an overall summary (worklog snapshot, outstanding invoices, uninvoiced hours) 
+    - trk summary: Shows an overall summary (worklog snapshot, outstanding invoices, uninvoiced hours)
     - trk summary -p: Show output filtered by project
-  
+
   trk push/pull: Sync data
     - trk push: Alias for `git push` on the trk repo
     - trk pull: Alias for `git pull` on the trk repo
@@ -59,16 +65,22 @@ P2 CLI
     - trk git push: Alias for git push
     - trk git pull: Alias for git pull
 
-Features
+Features/TODO
 
+  - Come up with a better invoice storage format
+    - One idea: yaml file per project with a list of invoices
+    - Another: yaml file per invoice named based on the project + date period (invoice ID is hard)
+    - Fields such as hourly rate and hours billed are optional since they can be inferred, but overridden
   - Invoices should show as dirty or something, when we've generated them but changed the hours.
     Then you should be able to regenerate an invoice, but if its marked as sent, throw warning.
   - Print invoice yaml location when written
   - Do not allow modification to hours for finalized invoice periods.
-  - Do not generate invoices for open periods
+    - Warning for sent invoice periods
+  - trk invoice list should only show generated invoices
+    - but an option -a for 'all' should also show the current/pending invoice?
 
 Issues
-  
+
   - Date parsing issues
     - 3/5 doesnt work but 2024/3/5 does, we can probably try to just add this.
   - Error on incompatible flags
