@@ -2,6 +2,7 @@ package core
 
 import (
 	"os"
+	"time"
 
 	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/storage"
@@ -42,7 +43,13 @@ func InitTrk(forceReset bool) (bool, error) {
 }
 
 func writeDefaultConfig() error {
+	loc, err := time.LoadLocation("America/Los_Angeles")
+	if err != nil {
+		return err
+	}
+
 	return storage.SaveConfig(config.TrkConfig{
+		TimeZone: loc,
 		Projects: []config.ProjectConfig{
 			{
 				Name:       "Example project",

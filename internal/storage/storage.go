@@ -18,7 +18,11 @@ const (
 )
 
 func SaveConfig(cfg config.TrkConfig) error {
-	data, err := yaml.Marshal(cfg)
+	sConfig, err := configToSerializable(cfg)
+	if err != nil {
+		return err
+	}
+	data, err := yaml.Marshal(sConfig)
 	if err != nil {
 		return err
 	}
@@ -34,8 +38,12 @@ func LoadConfig() (config.TrkConfig, error) {
 	if err != nil {
 		return config.TrkConfig{}, err
 	}
-	var cfg config.TrkConfig
-	err = yaml.Unmarshal(data, &cfg)
+	var sConfig trkConfigSerializable
+	err = yaml.Unmarshal(data, &sConfig)
+	if err != nil {
+		return config.TrkConfig{}, err
+	}
+	cfg, err := configFromSerializable(sConfig)
 	if err != nil {
 		return config.TrkConfig{}, err
 	}
