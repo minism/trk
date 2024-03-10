@@ -73,17 +73,20 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 	// Output format.
 	log.Printf("Showing logs since %s\n\n", display.ReadableDate(from))
 	if flagDisplayInvoice {
-		byProject := model.GroupLogEntriesByProject(entries)
-		for _, project := range projects {
-			log.Printf("Project: %s\n", display.ColorProject(project.Name))
-			invoices, err := core.FetchInvoicesForProject(project)
-			if err != nil {
-				return err
-			}
-			byInvoiceDate := model.GroupLogEntriesByBimonthly(byProject[project.ID()])
-			display.PrintInvoicePeriodLogEntryTable(byInvoiceDate, invoices)
-			fmt.Println()
-		}
+		return core.ErrNotImplemented
+
+		// This needs work.
+		// byProject := model.GroupLogEntriesByProject(entries)
+		// for _, project := range projects {
+		// 	log.Printf("Project: %s\n", display.ColorProject(project.Name))
+		// 	invoices, err := core.FetchInvoicesForProject(project)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// 	byInvoiceDate := model.GroupLogEntriesByBimonthly(byProject[project.ID()])
+		// 	display.PrintInvoicePeriodLogEntryTable(byInvoiceDate, invoices)
+		// 	fmt.Println()
+		// }
 	} else if flagDisplayWeekly {
 		byProject := model.GroupLogEntriesByProject(entries)
 		for _, project := range projects {

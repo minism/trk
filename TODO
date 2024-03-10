@@ -24,7 +24,6 @@ P0 CLI
     - trk log --since 'january': Show entries since given date
     - trk log -d yesterday: Show entries on a given date
     - trk log -w: Group entries by week/project
-    - trk log -i: Group entries by invoice period/project
 
   trk invoice: Manage invoices
     - trk invoice list: List all invoices and their statuses
@@ -37,6 +36,9 @@ P0 CLI
     - trk invoice delete <invoice_id>: Deletes an invoice
 
 P1 CLI
+
+  trk log:
+    - trk log -i: Group entries by invoice period/project
 
   trk clear: Clear time tracking
     - trk clear <project>: Clear time tracking hours for today (alias for set 0)
