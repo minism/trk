@@ -1,0 +1,7 @@
+exec trk init
+
+# Log some time for today
+exec trk add example-project 2
+exec trk add example-project 2
+stdout 'Logged 2 hours'
+stdout '4 hours total'

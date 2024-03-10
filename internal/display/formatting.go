@@ -1,6 +1,8 @@
 package display
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/dustin/go-humanize"
@@ -19,9 +21,13 @@ func ReadableMoney(value float64) string {
 }
 
 func ReadableHours(hours float64) string {
-	return ColorHours("%.2f hours", hours)
+	return ColorHours("%s hours", FormatFloatMinDecimal(hours))
 }
 
 func ReadableEmpty() string {
 	return ColorNull("(empty)")
+}
+
+func FormatFloatMinDecimal(value float64) string {
+	return strings.TrimRight(strings.TrimRight(fmt.Sprintf("%.2f", value), "0"), ".")
 }

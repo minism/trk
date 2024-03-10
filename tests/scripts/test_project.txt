@@ -1,0 +1,5 @@
+exec trk init
+
+exec trk project
+stdout 'All projects'
+stdout 'example-project'
