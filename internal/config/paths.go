@@ -28,6 +28,16 @@ func GetProjectInvoicesPath(projectId string) string {
 
 // The directory all trk's application data is located for the current user.
 func GetUserAppDir() string {
+	// This is a bit of a hack, but for integration-tests we look at HOME being
+	// set to no-home and just use the local temporary working directory as
+	// the app directory.
+	if os.Getenv("HOME") == "/no-home" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+		return cwd
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)

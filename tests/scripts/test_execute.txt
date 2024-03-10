@@ -1,0 +1,5 @@
+exec trk
+stdout 'Usage'
+
+! exec trk -x
+stderr 'unknown shorthand flag'

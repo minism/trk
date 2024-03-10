@@ -5,6 +5,9 @@ VERSION := $(shell git describe --always --long --dirty)
 build:
 	go build -v -o ${OUT} -ldflags="-X github.com/minism/trk/internal/version.Version=${VERSION}" ${PKG}
 
+test:
+	go test ./...
+
 lint:
 	staticcheck ./...
 
