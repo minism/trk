@@ -1,3 +1,13 @@
 package version
 
-var Version string = "set-in-build"
+import (
+	"runtime/debug"
+)
+
+func GetVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+	return info.Main.Version
+}

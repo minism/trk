@@ -8,7 +8,7 @@ import (
 )
 
 func runVersionCmd(cmd *cobra.Command, args []string) error {
-	log.Printf("trk version %s\n", version.Version)
+	log.Printf("trk version %s\n", version.GetVersion())
 	return nil
 }
 
