@@ -1,2 +1,5 @@
 exec trk init
-stdout 'Initialized trk config'
+stdout '^Initialized trk config'
+
+exec trk init
+stdout '^Already initialized'

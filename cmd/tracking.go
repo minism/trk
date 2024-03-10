@@ -24,7 +24,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	var err error
 
 	// Parse date.
-	date := util.UserToday()
+	date := util.TrkToday()
 	if len(flagDate) > 0 {
 		date, err = util.ParseNaturalDate(flagDate)
 		if err != nil {

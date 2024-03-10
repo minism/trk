@@ -1,0 +1,27 @@
+exec trk init
+
+# Add various hours.
+trk set example-project -d today 5
+trk set example-project -d yesterday 6
+trk set example-project -d 'two days ago' 7
+
+# Query different log filters
+trk log
+stdout 'example-project.*5'
+stdout 'example-project.*6'
+stdout 'example-project.*7'
+
+trk log -d yesterday
+stdout 'example-project.*6'
+! stdout 'example-project.*5'
+! stdout 'example-project.*7'
+
+trk log --since yesterday
+stdout 'example-project.*6'
+stdout 'example-project.*5'
+! stdout 'example-project.*7'
+
+# Weekly format
+trk log -w
+stdout 'Week of 3/3/2024'
+stdout '18'

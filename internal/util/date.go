@@ -11,6 +11,8 @@ import (
 var (
 	MinDate time.Time = time.Unix(0, 0)
 	MaxDate time.Time = time.Unix(1<<62, 0)
+
+	FakeNowForTesting *time.Time
 )
 
 func IsSameDay(date1, date2 time.Time) bool {
@@ -21,7 +23,7 @@ func IsSameDay(date1, date2 time.Time) bool {
 }
 
 func ParseNaturalDate(input string) (time.Time, error) {
-	return anytime.Parse(input, time.Now().In(config.UserTimeZone), anytime.DefaultToPast)
+	return anytime.Parse(input, TrkNow().In(config.UserTimeZone), anytime.DefaultToPast)
 }
 
 func GetStartOfWeek(date time.Time) time.Time {
@@ -46,7 +48,14 @@ func GetNextBimonthlyDate(startDate time.Time) time.Time {
 	return time.Date(endYear, endMonth, endDay, 0, 0, 0, 0, config.UserTimeZone)
 }
 
-func UserToday() time.Time {
-	t := time.Now()
+func TrkNow() time.Time {
+	if FakeNowForTesting != nil {
+		return *FakeNowForTesting
+	}
+	return time.Now()
+}
+
+func TrkToday() time.Time {
+	t := TrkNow()
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, config.UserTimeZone)
 }
