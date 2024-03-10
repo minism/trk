@@ -108,7 +108,7 @@ func SaveProjectLogEntries(projectId string, entries []model.LogEntry) error {
 }
 
 func parseLogEntryCsvRow(row []string) (model.LogEntry, error) {
-	date, err := time.Parse(logEntryDateFormat, row[0])
+	date, err := time.ParseInLocation(logEntryDateFormat, row[0], config.UserTimeZone)
 	if err != nil {
 		return model.LogEntry{}, err
 	}

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/elliotchance/orderedmap/v2"
+	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/util"
 )
 
@@ -70,7 +71,7 @@ func GroupLogEntriesByBimonthly(entries []LogEntry) *orderedmap.OrderedMap[time.
 		} else {
 			day = 1
 		}
-		key := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+		key := time.Date(year, month, day, 0, 0, 0, 0, config.UserTimeZone)
 		if val, ok := ret.Get(key); !ok {
 			ret.Set(key, []LogEntry{entry})
 		} else {

@@ -24,8 +24,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	var err error
 
 	// Parse date.
-	// TODO: Revisit timezone stuff.
-	date := util.UtcToday()
+	date := util.UserToday()
 	if len(flagDate) > 0 {
 		date, err = util.ParseNaturalDate(flagDate)
 		if err != nil {

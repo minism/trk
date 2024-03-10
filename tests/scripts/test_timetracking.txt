@@ -1,7 +1,23 @@
 exec trk init
 
-# Log some time for today
+# Log some time for today.
 exec trk add example-project 2
 exec trk add example-project 2
 stdout 'Logged 2 hours'
 stdout '4 hours total'
+
+# Log some time for a different day
+exec trk add example-project -d yesterday 5
+exec trk add example-project -d yesterday 3
+stdout 'Logged 3 hours'
+stdout '8 hours total'
+
+# Now use set rather than add
+exec trk set example-project -d yesterday  6
+stdout 'Logged 6 hours'
+
+# Query via Log
+exec trk log
+stdout '4'
+exec trk log -d yesterday
+stdout '6'

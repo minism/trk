@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/ijt/go-anytime"
+	"github.com/minism/trk/internal/config"
 	"github.com/snabb/isoweek"
 )
 
@@ -20,14 +21,14 @@ func IsSameDay(date1, date2 time.Time) bool {
 }
 
 func ParseNaturalDate(input string) (time.Time, error) {
-	return anytime.Parse(input, time.Now().UTC(), anytime.DefaultToPast)
+	return anytime.Parse(input, time.Now().In(config.UserTimeZone), anytime.DefaultToPast)
 }
 
 func GetStartOfWeek(date time.Time) time.Time {
 	year, week := date.ISOWeek()
 
 	// Subtract 1 day since this library uses monday-based weeks.
-	return isoweek.StartTime(year, week, time.UTC).Add(-time.Duration(24) * time.Hour)
+	return isoweek.StartTime(year, week, config.UserTimeZone).Add(-time.Duration(24) * time.Hour)
 }
 
 func GetNextBimonthlyDate(startDate time.Time) time.Time {
@@ -42,10 +43,10 @@ func GetNextBimonthlyDate(startDate time.Time) time.Time {
 		endYear++
 		endDay++
 	}
-	return time.Date(endYear, endMonth, endDay, 0, 0, 0, 0, time.UTC)
+	return time.Date(endYear, endMonth, endDay, 0, 0, 0, 0, config.UserTimeZone)
 }
 
-func UtcToday() time.Time {
+func UserToday() time.Time {
 	t := time.Now()
-	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
+	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, config.UserTimeZone)
 }
