@@ -44,7 +44,9 @@ P1 CLI
 
   trk project: Project management
     - trk project list: List all projects
-    - trk project create <project>: Create a new project
+    - trk project create: Create a new project
+      - trk project create <project> --name: Specify name during creation
+      - trk project create <project> --rate: Specify rate during creation
     - trk project delete <project>: Delete a project
     - trk project set-rate <project> <rate>: Set the hourly rate for a project
 

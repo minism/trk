@@ -1,0 +1,5 @@
+exec trk init
+
+exec trk add example-project 5 -m 'I worked on something cool'
+exec trk log
+stdout '5.*I worked on something cool'
