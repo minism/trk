@@ -17,13 +17,31 @@ func FetchInvoicesForProject(project model.Project) ([]model.ProjectInvoice, err
 	return model.MakeProjectInvoices(project, invoices), nil
 }
 
+func FetchAllProjectInvoices() ([]model.ProjectInvoice, error) {
+	projects, err := FetchAllProjects()
+	if err != nil {
+		return nil, err
+	}
+
+	ret := make([]model.ProjectInvoice, 0)
+	for _, project := range projects {
+		invoices, err := FetchInvoicesForProject(project)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, invoices...)
+	}
+
+	return ret, nil
+}
+
 func FetchProjectInvoiceById(id model.ProjectInvoiceId) (model.ProjectInvoice, error) {
 	projectId, invoiceId, err := model.ParseProjectInvoiceId(id)
 	if err != nil {
 		return model.ProjectInvoice{}, err
 	}
 
-	project, err := GetProjectById(projectId)
+	project, err := FetchProjectById(projectId)
 	if err != nil {
 		return model.ProjectInvoice{}, err
 	}

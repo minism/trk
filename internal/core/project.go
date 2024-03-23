@@ -7,7 +7,7 @@ import (
 	"github.com/minism/trk/pkg/model"
 )
 
-func GetAllProjects() ([]model.Project, error) {
+func FetchAllProjects() ([]model.Project, error) {
 	cfg, err := storage.LoadConfig()
 	if err != nil {
 		return nil, err
@@ -21,8 +21,8 @@ func GetAllProjects() ([]model.Project, error) {
 	return projects, nil
 }
 
-func GetProjectById(id string) (model.Project, error) {
-	projects, err := GetAllProjects()
+func FetchProjectById(id string) (model.Project, error) {
+	projects, err := FetchAllProjects()
 	if err != nil {
 		return model.Project{}, err
 	}
@@ -35,6 +35,6 @@ func GetProjectById(id string) (model.Project, error) {
 }
 
 func ValidateProjectId(id string) error {
-	_, err := GetProjectById(id)
+	_, err := FetchProjectById(id)
 	return err
 }

@@ -33,7 +33,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	// Match project.
-	projects, err := core.GetAllProjects()
+	projects, err := core.FetchAllProjects()
 	if err != nil {
 		return err
 	}

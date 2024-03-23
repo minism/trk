@@ -16,7 +16,7 @@ func wrapCommand(handler func(cmd *cobra.Command, args []string) error) func(cmd
 		if err := handler(cmd, args); err != nil {
 			log.Println(err)
 			if errors.Is(err, core.ErrMultipleProjectsMatched) {
-				projects, innerErr := core.GetAllProjects()
+				projects, innerErr := core.FetchAllProjects()
 				if innerErr != nil {
 					panic(innerErr)
 				}
@@ -29,7 +29,7 @@ func wrapCommand(handler func(cmd *cobra.Command, args []string) error) func(cmd
 
 // Get the filtered set of projects for a command based on the global flag.
 func getFilteredProjects() ([]model.Project, error) {
-	projects, err := core.GetAllProjects()
+	projects, err := core.FetchAllProjects()
 	if err != nil {
 		return nil, err
 	}

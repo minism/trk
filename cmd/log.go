@@ -23,7 +23,7 @@ var (
 )
 
 func runLogCmd(cmd *cobra.Command, args []string) error {
-	projects, err := core.GetAllProjects()
+	projects, err := core.FetchAllProjects()
 	if err != nil {
 		return err
 	}

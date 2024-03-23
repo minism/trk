@@ -7,6 +7,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/elliotchance/orderedmap/v2"
+	"github.com/minism/trk/internal/report"
 	"github.com/minism/trk/pkg/model"
 	"github.com/rodaine/table"
 )
@@ -69,5 +70,21 @@ func PrintProjectInvoicesTable(invoices []model.ProjectInvoice) {
 			ReadableMoney(pi.Invoice.Total()),
 			pi.Invoice.Status())
 	}
+	tbl.Print()
+}
+
+func PrintIncomeReportTable(reports []report.MonthIncomeReport) {
+	tbl := table.New("Month", "Paid amount", "Pending amount")
+	totalPaid := 0.0
+	totalPending := 0.0
+
+	for _, r := range reports {
+		tbl.AddRow(ReadableYearMonth(r.YearMonth), ReadableMoney(r.PaidAmount), ReadableMoney(r.PendingAmount))
+		totalPaid += r.PaidAmount
+		totalPending += r.PendingAmount
+	}
+
+	// TODO: Ideally we could support separators within a table.
+	tbl.AddRow(ColorMoney("TOTAL"), ReadableMoney(totalPaid), ReadableMoney(totalPending))
 	tbl.Print()
 }

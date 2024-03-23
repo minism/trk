@@ -16,6 +16,10 @@ func ReadableDateWithoutColor(date time.Time) string {
 	return date.Format("Monday, January 2")
 }
 
+func ReadableYearMonth(date time.Time) string {
+	return ColorDate(date.Format("January 2006"))
+}
+
 func ReadableMoney(value float64) string {
 	return ColorMoney("$%s", humanize.FormatFloat("#,###.##", value))
 }
