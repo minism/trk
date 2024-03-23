@@ -5,14 +5,14 @@ import (
 )
 
 type Invoice struct {
-	Id          string    `yaml:"id"`
+	Id          int       `yaml:"id"`
 	StartDate   time.Time `yaml:"start_date"`
 	EndDate     time.Time `yaml:"end_date"` // Exclusive
 	HoursLogged float64   `yaml:"hours_logged"`
 	HoursBilled float64   `yaml:"hours_billed"`
 	HourlyRate  float64   `yaml:"hourly_rate"`
 	IsSent      bool      `yaml:"is_sent"`
-	IsPaid      bool      `yaml:"is_paid`
+	IsPaid      bool      `yaml:"is_paid"`
 }
 
 func (i *Invoice) Status() string {

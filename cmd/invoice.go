@@ -26,7 +26,7 @@ func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
 			continue
 		}
 		fmt.Printf("Project: %s\n", display.ColorProject(project.ID()))
-		display.PrintInvoicesTable(invoices)
+		display.PrintProjectInvoicesTable(invoices)
 		fmt.Println()
 	}
 
@@ -48,7 +48,7 @@ func runGenerateInvoiceCmd(cmd *cobra.Command, args []string) error {
 			continue
 		}
 		fmt.Printf("Generated %d invoices for: %s\n", len(invoices), display.ColorProject(project.ID()))
-		display.PrintInvoicesTable(invoices)
+		display.PrintProjectInvoicesTable(invoices)
 		fmt.Println()
 	}
 

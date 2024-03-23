@@ -4,15 +4,15 @@ trk init
 trk invoice list
 ! stdout 'Invoice'
 
-# Add work in two different peroids
+# Add work in two different bimonthly periods in february
 trk add example-project 5 -d 'feb 1'
 trk add example-project 10 -d 'feb 25'
 
 # Expect two invoices to be generated
 trk invoice generate
 stdout 'Generated 2 invoices'
-stdout '2024-02-01.*5'
-stdout '2024-02-16.*10'
+stdout '1.*2024-02-01.*5'
+stdout '2.*2024-02-16.*10'
 
 # Log work for the march 1-15 interval, which hasn't ended yet, because "today" is mar 6
 trk add example-project 5 -d today
@@ -20,3 +20,9 @@ trk add example-project 5 -d today
 # We shouldn't have generated anything, because the invoice period is still open.
 trk invoice generate
 ! stdout 'Generated'
+
+# Now generate a historical invoice for jan, it should have ID 3 even though its in the past, since IDs should be stable.
+trk add example-project 20 -d 'jan 5th'
+trk invoice generate
+stdout 'Generated 1 invoices'
+stdout '3.*2024-01-01.*290'

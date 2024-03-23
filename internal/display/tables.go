@@ -51,18 +51,24 @@ func PrintInvoicePeriodLogEntryTable(byInvoiceDate *orderedmap.OrderedMap[time.T
 	tbl.Print()
 }
 
-func PrintInvoicesTable(invoices []model.Invoice) {
-	tbl := table.New("Invoice Date", "Hours Billed", "Rate", "Total", "Status")
+func PrintProjectInvoicesTable(invoices []model.ProjectInvoice) {
+	tbl := table.New("Invoice ID", "Invoice Date", "Hours Billed", "Rate", "Total", "Status")
 	tbl.WithFirstColumnFormatter(ColorDate)
-	for _, invoice := range invoices {
-		hours := FormatFloatMinDecimal(invoice.HoursBilled)
+	for _, pi := range invoices {
+		hours := FormatFloatMinDecimal(pi.Invoice.HoursBilled)
 
 		// If hours billed differed from logs, show slightly more information.
-		if invoice.HoursBilled != invoice.HoursLogged {
-			hours = fmt.Sprintf("%s (%s logged)", hours, FormatFloatMinDecimal(invoice.HoursLogged))
+		if pi.Invoice.HoursBilled != pi.Invoice.HoursLogged {
+			hours = fmt.Sprintf("%s (%s logged)", hours, FormatFloatMinDecimal(pi.Invoice.HoursLogged))
 		}
 
-		tbl.AddRow(invoice.StartDate.Format("2006-01-02"), hours, invoice.HourlyRate, ReadableMoney(invoice.Total()), invoice.Status())
+		tbl.AddRow(
+			pi.GlobalId(),
+			pi.Invoice.StartDate.Format("2006-01-02"),
+			hours,
+			pi.Invoice.HourlyRate,
+			ReadableMoney(pi.Invoice.Total()),
+			pi.Invoice.Status())
 	}
 	tbl.Print()
 }

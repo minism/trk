@@ -8,11 +8,15 @@ import (
 	"github.com/minism/trk/pkg/model"
 )
 
-func FetchInvoicesForProject(project model.Project) ([]model.Invoice, error) {
-	return storage.LoadInvoices(project)
+func FetchInvoicesForProject(project model.Project) ([]model.ProjectInvoice, error) {
+	invoices, err := storage.LoadInvoices(project)
+	if err != nil {
+		return nil, err
+	}
+	return model.MakeProjectInvoices(project, invoices), nil
 }
 
-func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, error) {
+func GenerateNewInvoicesForProject(project model.Project) ([]model.ProjectInvoice, error) {
 	// Load entries and group by bimonthly.
 	entries, err := RetrieveLogEntries(project)
 	if err != nil {
@@ -27,15 +31,21 @@ func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, erro
 	// TODO: Support other invoice periods.
 	entriesByStartDate := model.GroupLogEntriesByBimonthly(entries)
 
-	// Fetch allInvoices for the project and see what's missing.
-	allInvoices, err := FetchInvoicesForProject(project)
+	// Fetch all invoices for the project and see what's missing.
+	allInvoices, err := storage.LoadInvoices(project)
 	if err != nil {
 		return nil, err
 	}
 
 	// Drop any we've already generated.
+	maxInvoiceId := 0
 	for _, invoice := range allInvoices {
 		entriesByStartDate.Delete(invoice.StartDate.Unix())
+
+		// Get the highest invoice ID number to generate the next one.
+		if invoice.Id > maxInvoiceId {
+			maxInvoiceId = invoice.Id
+		}
 	}
 
 	// Create new invoices for the remainder.
@@ -46,6 +56,7 @@ func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, erro
 		totalHours := model.GetTotalHours(el.Value)
 
 		invoice := model.Invoice{
+			Id:          maxInvoiceId + 1,
 			StartDate:   startDate,
 			EndDate:     endDate,
 			HoursLogged: totalHours,
@@ -58,6 +69,7 @@ func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, erro
 		}
 		newInvoices = append(newInvoices, invoice)
 		allInvoices = append(allInvoices, invoice)
+		maxInvoiceId++
 	}
 
 	// Write back to storage.
@@ -66,5 +78,5 @@ func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, erro
 		return nil, err
 	}
 
-	return newInvoices, nil
+	return model.MakeProjectInvoices(project, newInvoices), nil
 }
