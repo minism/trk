@@ -1,0 +1,11 @@
+exec trk init
+
+# Add various hours.
+exec trk set example-project -d today 5
+exec trk set example-project -d yesterday 6
+exec trk set example-project -d 'two days ago' 7
+
+# Weekly format
+exec trk log -w
+stdout 'Week of 3/3/2024'
+stdout '18'

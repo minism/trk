@@ -20,8 +20,3 @@ exec trk log --since yesterday
 stdout 'example-project.*6'
 stdout 'example-project.*5'
 ! stdout 'example-project.*7'
-
-# Weekly format
-exec trk log -w
-stdout 'Week of 3/3/2024'
-stdout '18'

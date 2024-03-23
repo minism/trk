@@ -8,23 +8,13 @@ import (
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
-	"github.com/minism/trk/pkg/model"
 	"github.com/spf13/cobra"
 )
 
 func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
-	projects, err := core.GetAllProjects()
+	projects, err := getFilteredProjects()
 	if err != nil {
 		return err
-	}
-
-	// Optionally filter by a single project.
-	if flagProject != "" {
-		project, err := core.FilterProjectsByIdFuzzy(projects, flagProject)
-		if err != nil {
-			return err
-		}
-		projects = []model.Project{project}
 	}
 
 	for _, project := range projects {
@@ -44,7 +34,7 @@ func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
 }
 
 func runGenerateInvoiceCmd(cmd *cobra.Command, args []string) error {
-	projects, err := core.GetAllProjects()
+	projects, err := getFilteredProjects()
 	if err != nil {
 		return err
 	}
