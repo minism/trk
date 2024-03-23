@@ -55,7 +55,14 @@ func PrintInvoicesTable(invoices []model.Invoice) {
 	tbl := table.New("Invoice Date", "Hours Billed", "Rate", "Total", "Status")
 	tbl.WithFirstColumnFormatter(ColorDate)
 	for _, invoice := range invoices {
-		tbl.AddRow(invoice.StartDate.Format("2006-01-02"), invoice.HoursBilled(), invoice.HourlyRate(), ReadableMoney(invoice.Total()), invoice.Status())
+		hours := FormatFloatMinDecimal(invoice.HoursBilled)
+
+		// If hours billed differed from logs, show slightly more information.
+		if invoice.HoursBilled != invoice.HoursLogged {
+			hours = fmt.Sprintf("%s (%s logged)", hours, FormatFloatMinDecimal(invoice.HoursLogged))
+		}
+
+		tbl.AddRow(invoice.StartDate.Format("2006-01-02"), hours, invoice.HourlyRate, ReadableMoney(invoice.Total()), invoice.Status())
 	}
 	tbl.Print()
 }

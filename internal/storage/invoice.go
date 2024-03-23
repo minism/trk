@@ -23,17 +23,11 @@ func LoadInvoices(project model.Project) ([]model.Invoice, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return invoices, nil
 }
 
 func SaveInvoices(project model.Project, invoices []model.Invoice) error {
-	// Validate.
-	for _, invoice := range invoices {
-		if invoice.Project.ID() != project.ID() {
-			return errors.New("expected all invoices to match given project")
-		}
-	}
-
 	// Ensure the directory exists.
 	dir := path.Dir(project.InvoicesPath())
 	err := os.MkdirAll(dir, os.ModePerm)

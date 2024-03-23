@@ -30,7 +30,6 @@ P0 CLI
     - trk invoice list -p <project>: List invoices for a project
     - trk invoice generate: Generate invoices for all work periods that don't have invoices
     - trk invoice generate -p <project>: Generate invoices for one project
-    - trk invoice generate <invoice_id>: Re-generate an existing invoice, throws warning if sent already.
     - trk invoice mark-sent <invoice_id>: Mark an invoice as sent to client
     - trk invoice mark-paid <invoice_id>: Mark an invoice as paid
     - trk invoice delete <invoice_id>: Deletes an invoice
@@ -39,6 +38,9 @@ P1 CLI
 
   trk log:
     - trk log -i: Group entries by invoice period/project
+
+  trk invoice: Manage invoices
+    - trk invoice generate <invoice_id>: Re-generate an existing invoice, throws warning if sent already.
 
   trk clear: Clear time tracking
     - trk clear <project>: Clear time tracking hours for today (alias for set 0)

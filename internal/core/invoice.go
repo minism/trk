@@ -40,10 +40,15 @@ func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, erro
 		totalHours := model.GetTotalHours(el.Value)
 
 		invoice := model.Invoice{
-			Project:     project,
 			StartDate:   startDate,
 			EndDate:     endDate,
 			HoursLogged: totalHours,
+
+			// Billed defaults to logged but can be overridden.
+			HoursBilled: totalHours,
+
+			// Rate defaults to project rate but can be overridden.
+			HourlyRate: project.HourlyRate,
 		}
 		newInvoices = append(newInvoices, invoice)
 		allInvoices = append(allInvoices, invoice)
