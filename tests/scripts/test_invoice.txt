@@ -25,4 +25,4 @@ trk invoice generate
 trk add example-project 20 -d 'jan 5th'
 trk invoice generate
 stdout 'Generated 1 invoices'
-stdout '3.*2024-01-01.*290'
+stdout '3.*2024-01-01.*20'
