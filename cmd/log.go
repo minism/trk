@@ -66,7 +66,7 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	// Fetch entries.
-	entries, err := core.RetrieveAllLogEntries(projects)
+	entries, err := core.FetchAllLogEntries(projects)
 	if err != nil {
 		return err
 	}

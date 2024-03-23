@@ -10,6 +10,10 @@ type Project struct {
 	config.ProjectConfig
 }
 
+func (p *Project) Equals(other *Project) bool {
+	return p.ID() == other.ID()
+}
+
 func (p *Project) ID() string {
 	id := strings.ToLower(p.ProjectConfig.Name)
 	id = strings.Join(strings.Fields(id), "-")

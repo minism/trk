@@ -82,7 +82,7 @@ func DeleteProjectInvoiceById(id model.ProjectInvoiceId) error {
 
 func GenerateNewInvoicesForProject(project model.Project) ([]model.ProjectInvoice, error) {
 	// Load entries and group by bimonthly.
-	entries, err := RetrieveLogEntries(project)
+	entries, err := FetchLogEntriesForProject(project)
 	if err != nil {
 		return nil, err
 	}

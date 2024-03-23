@@ -36,6 +36,16 @@ func FilterLogEntriesBetween(entries []LogEntry, from time.Time, to time.Time) [
 	return matches
 }
 
+func ExcludeLogEntriesBetween(entries []LogEntry, from time.Time, to time.Time) []LogEntry {
+	excluded := make([]LogEntry, 0)
+	for _, entry := range entries {
+		if entry.Date.Before(from) || entry.Date.Equal(to) || entry.Date.After(to) {
+			excluded = append(excluded, entry)
+		}
+	}
+	return excluded
+}
+
 func GroupLogEntriesByProject(entries []LogEntry) map[string][]LogEntry {
 	ret := make(map[string][]LogEntry)
 	for _, entry := range entries {

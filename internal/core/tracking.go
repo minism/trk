@@ -18,12 +18,12 @@ func MakeLogEntry(project model.Project, date time.Time, hours float64, note str
 }
 
 // Retrieve sorted log entries for a given project.
-func RetrieveLogEntries(project model.Project) ([]model.LogEntry, error) {
-	return RetrieveAllLogEntries([]model.Project{project})
+func FetchLogEntriesForProject(project model.Project) ([]model.LogEntry, error) {
+	return FetchAllLogEntries([]model.Project{project})
 }
 
 // Retrieve merged and sorted log entries for the given projects.
-func RetrieveAllLogEntries(projects []model.Project) ([]model.LogEntry, error) {
+func FetchAllLogEntries(projects []model.Project) ([]model.LogEntry, error) {
 	entries := make([]model.LogEntry, 0)
 	// Concatenate all entries.
 	for _, project := range projects {
@@ -39,7 +39,7 @@ func RetrieveAllLogEntries(projects []model.Project) ([]model.LogEntry, error) {
 // Appends the given log entry to storage.
 // Returns all entries for the day.
 func AppendLogEntry(entry model.LogEntry, erasePreviousForDay bool) ([]model.LogEntry, error) {
-	entries, err := RetrieveLogEntries(entry.Project)
+	entries, err := FetchLogEntriesForProject(entry.Project)
 	if err != nil {
 		return nil, err
 	}
