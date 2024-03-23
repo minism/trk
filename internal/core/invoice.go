@@ -1,6 +1,8 @@
 package core
 
 import (
+	"time"
+
 	"github.com/minism/trk/internal/storage"
 	"github.com/minism/trk/internal/util"
 	"github.com/minism/trk/pkg/model"
@@ -10,7 +12,7 @@ func FetchInvoicesForProject(project model.Project) ([]model.Invoice, error) {
 	return storage.LoadInvoices(project)
 }
 
-func GenerateInvoicesForProject(project model.Project) ([]model.Invoice, error) {
+func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, error) {
 	// Load entries and group by bimonthly.
 	// TODO: Support other invoice periods.
 	entries, err := RetrieveLogEntries(project)
@@ -27,13 +29,13 @@ func GenerateInvoicesForProject(project model.Project) ([]model.Invoice, error) 
 
 	// Drop any we've already generated.
 	for _, invoice := range allInvoices {
-		entriesByStartDate.Delete(invoice.StartDate)
+		entriesByStartDate.Delete(invoice.StartDate.Unix())
 	}
 
 	// Create new invoices for the remainder.
 	newInvoices := make([]model.Invoice, 0)
 	for el := entriesByStartDate.Front(); el != nil; el = el.Next() {
-		startDate := el.Key
+		startDate := time.Unix(el.Key, 0)
 		endDate := util.GetNextBimonthlyDate(startDate)
 		totalHours := model.GetTotalHours(el.Value)
 

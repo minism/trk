@@ -3,3 +3,13 @@ trk init
 # Should be no output for empty state
 trk invoice list
 ! stdout 'Invoice'
+
+# Add work in two different peroids
+trk add example-project 5 -d 'feb 1'
+trk add example-project 10 -d 'feb 25'
+
+# Expect two invoices to be generated
+trk invoice generate
+stdout 'Generated 2 invoices'
+stdout '2024-02-01.*5'
+stdout '2024-02-16.*10'

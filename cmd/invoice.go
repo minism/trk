@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
@@ -36,7 +35,7 @@ func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
 		if len(invoices) < 1 {
 			continue
 		}
-		log.Printf("Project: %s\n", display.ColorProject(project.ID()))
+		fmt.Printf("Project: %s\n", display.ColorProject(project.ID()))
 		display.PrintInvoicesTable(invoices)
 		fmt.Println()
 	}
@@ -51,11 +50,14 @@ func runGenerateInvoiceCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, project := range projects {
-		invoices, err := core.GenerateInvoicesForProject(project)
+		invoices, err := core.GenerateNewInvoicesForProject(project)
 		if err != nil {
 			return err
 		}
-		log.Printf("Project: %s\n", display.ColorProject(project.ID()))
+		if len(invoices) < 1 {
+			continue
+		}
+		fmt.Printf("Generated %d invoices for: %s\n", len(invoices), display.ColorProject(project.ID()))
 		display.PrintInvoicesTable(invoices)
 		fmt.Println()
 	}

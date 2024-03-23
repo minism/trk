@@ -49,10 +49,11 @@ func GroupLogEntriesByProject(entries []LogEntry) map[string][]LogEntry {
 	return ret
 }
 
-func GroupLogEntriesByWeekStart(entries []LogEntry) *orderedmap.OrderedMap[time.Time, []LogEntry] {
-	ret := orderedmap.NewOrderedMap[time.Time, []LogEntry]()
+// Keyed by Unix seconds.
+func GroupLogEntriesByWeekStart(entries []LogEntry) *orderedmap.OrderedMap[int64, []LogEntry] {
+	ret := orderedmap.NewOrderedMap[int64, []LogEntry]()
 	for _, entry := range entries {
-		key := util.GetStartOfWeek(entry.Date)
+		key := util.GetStartOfWeek(entry.Date).Unix()
 		if val, ok := ret.Get(key); !ok {
 			ret.Set(key, []LogEntry{entry})
 		} else {
@@ -62,8 +63,9 @@ func GroupLogEntriesByWeekStart(entries []LogEntry) *orderedmap.OrderedMap[time.
 	return ret
 }
 
-func GroupLogEntriesByBimonthly(entries []LogEntry) *orderedmap.OrderedMap[time.Time, []LogEntry] {
-	ret := orderedmap.NewOrderedMap[time.Time, []LogEntry]()
+// Keyed by Unix seconds.
+func GroupLogEntriesByBimonthly(entries []LogEntry) *orderedmap.OrderedMap[int64, []LogEntry] {
+	ret := orderedmap.NewOrderedMap[int64, []LogEntry]()
 	for _, entry := range entries {
 		year, month, day := entry.Date.Date()
 		if day > 15 {
@@ -71,7 +73,7 @@ func GroupLogEntriesByBimonthly(entries []LogEntry) *orderedmap.OrderedMap[time.
 		} else {
 			day = 1
 		}
-		key := time.Date(year, month, day, 0, 0, 0, 0, config.UserTimeZone)
+		key := time.Date(year, month, day, 0, 0, 0, 0, config.UserTimeZone).Unix()
 		if val, ok := ret.Get(key); !ok {
 			ret.Set(key, []LogEntry{entry})
 		} else {

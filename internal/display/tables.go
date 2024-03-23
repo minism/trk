@@ -31,11 +31,12 @@ func PrintLogEntryTable(entries []model.LogEntry) {
 	tbl.Print()
 }
 
-func PrintWeeklyLogEntryTable(byWeek *orderedmap.OrderedMap[time.Time, []model.LogEntry]) {
+func PrintWeeklyLogEntryTable(byWeek *orderedmap.OrderedMap[int64, []model.LogEntry]) {
 	tbl := table.New("Week", "Total Hours")
 	for el := byWeek.Front(); el != nil; el = el.Next() {
 		total := model.GetTotalHours(el.Value)
-		tbl.AddRow(fmt.Sprintf("Week of %s", ColorDate(el.Key.Format("1/2/2006"))), total)
+		weekStart := time.Unix(el.Key, 0)
+		tbl.AddRow(fmt.Sprintf("Week of %s", ColorDate(weekStart.Format("1/2/2006"))), total)
 	}
 	tbl.Print()
 }
