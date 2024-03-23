@@ -13,6 +13,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	flagUnpaid bool
+)
+
 func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
 	projects, err := getFilteredProjects()
 	if err != nil {
@@ -21,6 +25,9 @@ func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
 
 	for _, project := range projects {
 		invoices, err := core.FetchInvoicesForProject(project)
+		if flagUnpaid {
+			invoices = model.FilterProjectInvoicesByUnpaid(invoices)
+		}
 		if err != nil {
 			return err
 		}
@@ -99,6 +106,8 @@ func init() {
 	invoicesCmd.AddCommand(listInvoicesCmd)
 	invoicesCmd.AddCommand(generateInvoicesCommand)
 	invoicesCmd.AddCommand(deleteInvoiceCommand)
+
+	listInvoicesCmd.Flags().BoolVarP(&flagUnpaid, "unpaid", "u", false, "Only show unpaid invoices")
 
 	deleteInvoiceCommand.Args = cobra.ExactArgs(1)
 }

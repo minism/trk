@@ -38,3 +38,13 @@ func ParseProjectInvoiceId(id ProjectInvoiceId) (string, int, error) {
 func (pi *ProjectInvoice) Id() ProjectInvoiceId {
 	return ProjectInvoiceId(fmt.Sprintf("%s-%d", pi.Project.ID(), pi.Invoice.Id))
 }
+
+func FilterProjectInvoicesByUnpaid(invoices []ProjectInvoice) []ProjectInvoice {
+	var ret []ProjectInvoice
+	for _, pi := range invoices {
+		if !pi.Invoice.IsPaid {
+			ret = append(ret, pi)
+		}
+	}
+	return ret
+}
