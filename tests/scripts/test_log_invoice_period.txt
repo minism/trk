@@ -1,0 +1,16 @@
+exec trk init
+
+# Add some logs for this invoice period
+exec trk set example-project -d today 5
+exec trk set example-project -d yesterday 6
+
+# Add some logs for last month
+exec trk set example-project -d 'feb 5' 7
+exec trk set example-project -d 'feb 25' 8
+
+# Filter logs by the current invoice period
+exec trk log -i
+stdout 'example-project.*5'
+stdout 'example-project.*6'
+! stdout 'example-project.*7'
+! stdout 'example-project.*8'

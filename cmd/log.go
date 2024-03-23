@@ -16,10 +16,10 @@ import (
 )
 
 var (
-	flagSince          string
-	flagAll            bool
-	flagDisplayWeekly  bool
-	flagDisplayInvoice bool
+	flagSince         string
+	flagAll           bool
+	flagDisplayWeekly bool
+	flagInvoicePeriod bool
 )
 
 func runLogCmd(cmd *cobra.Command, args []string) error {
@@ -30,9 +30,10 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 
 	// Determine date range.
 	// By default we show the last two weeks.
+	// TODO: Throw combination incompatibility errors here.
 	from := util.MinDate
 	to := util.MaxDate
-	if flagAll || flagDisplayWeekly || flagDisplayInvoice {
+	if flagAll || flagDisplayWeekly {
 		from = util.MinDate
 	} else if len(flagDate) > 0 {
 		from, err = util.ParseNaturalDate(flagDate)
@@ -40,6 +41,10 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		to = from.Add(time.Duration(24) * time.Hour)
+	} else if flagInvoicePeriod {
+		from = util.GetPrevBimonthlyDate(util.TrkToday())
+		to = util.GetNextBimonthlyDate(util.TrkToday())
+
 	} else if len(flagSince) > 0 {
 		from, err = util.ParseNaturalDate(flagSince)
 		if err != nil {
@@ -72,22 +77,7 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 
 	// Output format.
 	log.Printf("Showing logs since %s\n\n", display.ReadableDate(from))
-	if flagDisplayInvoice {
-		return core.ErrNotImplemented
-
-		// This needs work.
-		// byProject := model.GroupLogEntriesByProject(entries)
-		// for _, project := range projects {
-		// 	log.Printf("Project: %s\n", display.ColorProject(project.Name))
-		// 	invoices, err := core.FetchInvoicesForProject(project)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// 	byInvoiceDate := model.GroupLogEntriesByBimonthly(byProject[project.ID()])
-		// 	display.PrintInvoicePeriodLogEntryTable(byInvoiceDate, invoices)
-		// 	fmt.Println()
-		// }
-	} else if flagDisplayWeekly {
+	if flagDisplayWeekly {
 		byProject := model.GroupLogEntriesByProject(entries)
 		for _, project := range projects {
 			log.Printf("Project: %s\n", display.ColorProject(project.Name))
@@ -110,9 +100,9 @@ var logCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(logCmd)
-	logCmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all log history.")
-	logCmd.Flags().StringVarP(&flagDate, "date", "d", "", "Show logs for the given day only.")
+	logCmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all log history")
+	logCmd.Flags().StringVarP(&flagDate, "date", "d", "", "Only show logs for the given day")
 	logCmd.Flags().StringVar(&flagSince, "since", "last week", "Only show logs since the given date")
-	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly aggregated logs.")
-	logCmd.Flags().BoolVarP(&flagDisplayInvoice, "invoice", "i", false, "Show invoice-period aggregated logs and related invoice info.")
+	logCmd.Flags().BoolVarP(&flagInvoicePeriod, "invoice-period", "i", false, "Only show logs for the current invoice period (assumes bimonthly)")
+	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly aggregated logs")
 }
