@@ -15,6 +15,10 @@ type ProjectInvoice struct {
 
 type ProjectInvoiceId string
 
+func (pi *ProjectInvoice) Id() ProjectInvoiceId {
+	return ProjectInvoiceId(fmt.Sprintf("%s-%d", pi.Project.ID(), pi.Invoice.Id))
+}
+
 func MakeProjectInvoices(project Project, invoices []Invoice) []ProjectInvoice {
 	ret := make([]ProjectInvoice, 0)
 	for _, invoice := range invoices {
@@ -35,10 +39,6 @@ func ParseProjectInvoiceId(id ProjectInvoiceId) (string, int, error) {
 	return projectId, invoiceId, nil
 }
 
-func (pi *ProjectInvoice) Id() ProjectInvoiceId {
-	return ProjectInvoiceId(fmt.Sprintf("%s-%d", pi.Project.ID(), pi.Invoice.Id))
-}
-
 func FilterProjectInvoicesByUnpaid(invoices []ProjectInvoice) []ProjectInvoice {
 	var ret []ProjectInvoice
 	for _, invoice := range invoices {
@@ -47,4 +47,12 @@ func FilterProjectInvoicesByUnpaid(invoices []ProjectInvoice) []ProjectInvoice {
 		}
 	}
 	return ret
+}
+
+func SumInvoices(invoices []ProjectInvoice) float64 {
+	total := 0.0
+	for _, invoice := range invoices {
+		total += invoice.Total()
+	}
+	return total
 }

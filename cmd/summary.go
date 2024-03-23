@@ -17,7 +17,7 @@ func runSummaryCmd(cmd *cobra.Command, args []string) error {
 
 	unpaidInvoices := model.FilterProjectInvoicesByUnpaid(invoices)
 	if len(unpaidInvoices) > 0 {
-		fmt.Printf("You have %d unpaid invoices totaling %s:\n\n", len(unpaidInvoices), display.ReadableMoney(0))
+		fmt.Printf("You have %d unpaid invoices totaling %s:\n\n", len(unpaidInvoices), display.ReadableMoney(model.SumInvoices(unpaidInvoices)))
 		display.PrintProjectInvoicesTable(unpaidInvoices)
 	}
 
