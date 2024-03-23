@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
+	github.com/creasty/defaults v1.7.0
 	github.com/dustin/go-humanize v1.0.1
 	github.com/elliotchance/orderedmap/v2 v2.2.0
 	github.com/fatih/color v1.16.0

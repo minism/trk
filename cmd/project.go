@@ -18,10 +18,10 @@ func runProjectCmd(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	tbl := table.New("id", "name", "hourly rate")
+	tbl := table.New("id", "name", "hourly rate", "invoice interval")
 	tbl.WithFirstColumnFormatter(display.ColorProject)
 	for _, p := range projects {
-		tbl.AddRow(p.ID(), p.Name, display.ReadableMoney(p.HourlyRate))
+		tbl.AddRow(p.ID(), p.Name, display.ReadableMoney(p.HourlyRate), p.InvoiceInterval)
 	}
 
 	fmt.Printf("All projects:\n\n")

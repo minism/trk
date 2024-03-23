@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/creasty/defaults"
 	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/pkg/model"
 	"gopkg.in/yaml.v3"
@@ -44,6 +45,10 @@ func LoadConfig() (config.TrkConfig, error) {
 		return config.TrkConfig{}, err
 	}
 	cfg, err := configFromSerializable(sConfig)
+	if err != nil {
+		return config.TrkConfig{}, err
+	}
+	err = defaults.Set(&cfg)
 	if err != nil {
 		return config.TrkConfig{}, err
 	}
