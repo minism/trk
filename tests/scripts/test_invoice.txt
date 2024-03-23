@@ -13,3 +13,10 @@ trk invoice generate
 stdout 'Generated 2 invoices'
 stdout '2024-02-01.*5'
 stdout '2024-02-16.*10'
+
+# Log work for the march 1-15 interval, which hasn't ended yet, because "today" is mar 6
+trk add example-project 5 -d today
+
+# We shouldn't have generated anything, because the invoice period is still open.
+trk invoice generate
+! stdout 'Generated'

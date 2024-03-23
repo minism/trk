@@ -33,6 +33,16 @@ func GetStartOfWeek(date time.Time) time.Time {
 	return isoweek.StartTime(year, week, config.UserTimeZone).Add(-time.Duration(24) * time.Hour)
 }
 
+func GetPrevBimonthlyDate(startDate time.Time) time.Time {
+	year, month, day := startDate.Date()
+	if day > 15 {
+		day = 16
+	} else {
+		day = 1
+	}
+	return time.Date(year, month, day, 0, 0, 0, 0, config.UserTimeZone)
+}
+
 func GetNextBimonthlyDate(startDate time.Time) time.Time {
 	endYear, endMonth, endDay := startDate.Date()
 	if endDay > 1 {

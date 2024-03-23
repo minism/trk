@@ -14,11 +14,17 @@ func FetchInvoicesForProject(project model.Project) ([]model.Invoice, error) {
 
 func GenerateNewInvoicesForProject(project model.Project) ([]model.Invoice, error) {
 	// Load entries and group by bimonthly.
-	// TODO: Support other invoice periods.
 	entries, err := RetrieveLogEntries(project)
 	if err != nil {
 		return nil, err
 	}
+
+	// We only want to consider entries for finished invoice periods.
+	endDate := util.GetPrevBimonthlyDate(util.TrkToday())
+	entries = model.FilterLogEntriesBetween(entries, util.MinDate, endDate)
+
+	// Group invoices bimonthly.
+	// TODO: Support other invoice periods.
 	entriesByStartDate := model.GroupLogEntriesByBimonthly(entries)
 
 	// Fetch allInvoices for the project and see what's missing.
