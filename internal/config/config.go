@@ -6,6 +6,7 @@ type InvoiceInterval string
 
 const (
 	InvoiceIntervalBimonthly InvoiceInterval = "bimonthly"
+	InvoiceIntervalManual    InvoiceInterval = "manual"
 )
 
 type TrkConfig struct {

@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
 	"github.com/minism/trk/pkg/model"
@@ -41,6 +42,11 @@ func runGenerateInvoiceCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, project := range projects {
+		if project.InvoiceInterval != config.InvoiceIntervalBimonthly {
+			fmt.Printf("Skipping %s because it uses invoice interval %s\n", display.ColorProject(project.Name), project.InvoiceInterval)
+			continue
+		}
+
 		invoices, err := core.GenerateNewInvoicesForProject(project)
 		if err != nil {
 			return err
