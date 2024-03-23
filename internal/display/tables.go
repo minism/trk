@@ -53,7 +53,6 @@ func PrintInvoicePeriodLogEntryTable(byInvoiceDate *orderedmap.OrderedMap[time.T
 
 func PrintProjectInvoicesTable(invoices []model.ProjectInvoice) {
 	tbl := table.New("Invoice ID", "Invoice Date", "Hours Billed", "Rate", "Total", "Status")
-	tbl.WithFirstColumnFormatter(ColorDate)
 	for _, pi := range invoices {
 		hours := FormatFloatMinDecimal(pi.Invoice.HoursBilled)
 
@@ -63,8 +62,8 @@ func PrintProjectInvoicesTable(invoices []model.ProjectInvoice) {
 		}
 
 		tbl.AddRow(
-			pi.GlobalId(),
-			pi.Invoice.StartDate.Format("2006-01-02"),
+			ColorIdentifier(string(pi.Id())),
+			ColorDate(pi.Invoice.StartDate.Format("2006-01-02")),
 			hours,
 			pi.Invoice.HourlyRate,
 			ReadableMoney(pi.Invoice.Total()),

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/minism/trk/internal/storage"
@@ -14,6 +15,51 @@ func FetchInvoicesForProject(project model.Project) ([]model.ProjectInvoice, err
 		return nil, err
 	}
 	return model.MakeProjectInvoices(project, invoices), nil
+}
+
+func FetchProjectInvoiceById(id model.ProjectInvoiceId) (model.ProjectInvoice, error) {
+	projectId, invoiceId, err := model.ParseProjectInvoiceId(id)
+	if err != nil {
+		return model.ProjectInvoice{}, err
+	}
+
+	project, err := GetProjectById(projectId)
+	if err != nil {
+		return model.ProjectInvoice{}, err
+	}
+
+	invoices, err := FetchInvoicesForProject(project)
+	if err != nil {
+		return model.ProjectInvoice{}, err
+	}
+
+	for _, pi := range invoices {
+		if pi.Invoice.Id == invoiceId {
+			return pi, nil
+		}
+	}
+
+	return model.ProjectInvoice{}, fmt.Errorf("%w: %s", ErrInvoiceNotFound, id)
+}
+
+func DeleteProjectInvoiceById(id model.ProjectInvoiceId) error {
+	pi, err := FetchProjectInvoiceById(id)
+	if err != nil {
+		return err
+	}
+
+	// Rewrite updatedInvoices.
+	updatedInvoices, err := storage.LoadInvoices(pi.Project)
+	if err != nil {
+		return err
+	}
+	for i, invoice := range updatedInvoices {
+		if pi.Invoice.Id == invoice.Id {
+			updatedInvoices = append(updatedInvoices[:i], updatedInvoices[i+1:]...)
+			break
+		}
+	}
+	return storage.SaveInvoices(pi.Project, updatedInvoices)
 }
 
 func GenerateNewInvoicesForProject(project model.Project) ([]model.ProjectInvoice, error) {

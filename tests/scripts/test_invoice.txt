@@ -26,3 +26,10 @@ trk add example-project 20 -d 'jan 5th'
 trk invoice generate
 stdout 'Generated 1 invoices'
 stdout '3.*2024-01-01.*20'
+
+# Delete the second invoice
+trk invoice delete example-project-2
+stdout 'Deleted'
+trk invoice list
+stdout '1.*2024-02-01'
+! stdout '2.*2024-02-16'
