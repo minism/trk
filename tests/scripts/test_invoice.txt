@@ -1,0 +1,5 @@
+trk init
+
+# Should be no output for empty state
+trk invoice list
+! stdout 'Invoice'

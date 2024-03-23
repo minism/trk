@@ -33,6 +33,9 @@ func runListInvoicesCmd(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		if len(invoices) < 1 {
+			continue
+		}
 		log.Printf("Project: %s\n", display.ColorProject(project.ID()))
 		display.PrintInvoicesTable(invoices)
 		fmt.Println()
