@@ -9,8 +9,8 @@ import (
 
 // Simple composite structure that referse to an invoice for a particular project.
 type ProjectInvoice struct {
+	Invoice
 	Project Project
-	Invoice Invoice
 }
 
 type ProjectInvoiceId string
@@ -41,9 +41,9 @@ func (pi *ProjectInvoice) Id() ProjectInvoiceId {
 
 func FilterProjectInvoicesByUnpaid(invoices []ProjectInvoice) []ProjectInvoice {
 	var ret []ProjectInvoice
-	for _, pi := range invoices {
-		if !pi.Invoice.IsPaid {
-			ret = append(ret, pi)
+	for _, invoice := range invoices {
+		if !invoice.IsPaid {
+			ret = append(ret, invoice)
 		}
 	}
 	return ret

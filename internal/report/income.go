@@ -28,13 +28,12 @@ func GenerateMonthlyIncomeForYear(year int) ([]MonthIncomeReport, error) {
 		yearMonth := time.Date(year, month, 1, 0, 0, 0, 0, config.UserTimeZone)
 		var paidAmount, pendingAmount float64
 
-		for _, pi := range invoices {
-			// TODO: Struct embed invoice.
-			if pi.Invoice.StartDate.Year() == year && pi.Invoice.StartDate.Month() == month {
-				if pi.Invoice.IsPaid {
-					paidAmount += pi.Invoice.Total()
+		for _, invoice := range invoices {
+			if invoice.StartDate.Year() == year && invoice.StartDate.Month() == month {
+				if invoice.IsPaid {
+					paidAmount += invoice.Total()
 				} else {
-					pendingAmount += pi.Invoice.Total()
+					pendingAmount += invoice.Total()
 				}
 			}
 		}
@@ -52,8 +51,8 @@ func GenerateMonthlyIncomeForYear(year int) ([]MonthIncomeReport, error) {
 func getMaxMonth(invoices []model.ProjectInvoice) time.Month {
 	maxMonth := time.January
 
-	for _, pi := range invoices {
-		month := pi.Invoice.StartDate.Month()
+	for _, invoice := range invoices {
+		month := invoice.StartDate.Month()
 		if month > maxMonth {
 			maxMonth = month
 		}

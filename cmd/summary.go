@@ -26,7 +26,7 @@ func runSummaryCmd(cmd *cobra.Command, args []string) error {
 
 var summaryCmd = &cobra.Command{
 	Use:     "summary",
-	Aliases: []string{"status"},
+	Aliases: []string{"sum", "status"},
 	Short:   "Show a status overview (work-in-progres)",
 	Run:     wrapCommand(runSummaryCmd),
 }
