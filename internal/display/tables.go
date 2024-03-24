@@ -2,6 +2,7 @@ package display
 
 import (
 	"fmt"
+	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -28,6 +29,20 @@ func PrintLogEntryTable(entries []model.LogEntry) {
 	for _, entry := range entries {
 		tbl.AddRow(
 			entry.Date.Format("Mon 1/2"), ColorProject(entry.Project.ID()), entry.Hours, entry.Note)
+	}
+	tbl.Print()
+}
+
+func PrintCombinedLogEntryTable(entries []model.CombinedLogEntry) {
+	tbl := table.New("Date", "Projects", "Hours", "Notes")
+	tbl.WithFirstColumnFormatter(ColorDate)
+	for _, entry := range entries {
+		projectIds := make([]string, 0)
+		for _, project := range entry.Projects {
+			projectIds = append(projectIds, project.ID())
+		}
+		tbl.AddRow(
+			entry.Date.Format("Mon 1/2"), ColorProject(strings.Join(projectIds, ", ")), entry.Hours, entry.Note)
 	}
 	tbl.Print()
 }

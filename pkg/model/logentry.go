@@ -59,6 +59,20 @@ func GroupLogEntriesByProject(entries []LogEntry) map[string][]LogEntry {
 }
 
 // Keyed by Unix seconds.
+func GroupLogEntriesByDate(entries []LogEntry) *orderedmap.OrderedMap[int64, []LogEntry] {
+	ret := orderedmap.NewOrderedMap[int64, []LogEntry]()
+	for _, entry := range entries {
+		key := entry.Date.Unix()
+		if val, ok := ret.Get(key); !ok {
+			ret.Set(key, []LogEntry{entry})
+		} else {
+			ret.Set(key, append(val, entry))
+		}
+	}
+	return ret
+}
+
+// Keyed by Unix seconds.
 func GroupLogEntriesByWeekStart(entries []LogEntry) *orderedmap.OrderedMap[int64, []LogEntry] {
 	ret := orderedmap.NewOrderedMap[int64, []LogEntry]()
 	for _, entry := range entries {

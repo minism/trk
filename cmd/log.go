@@ -16,10 +16,11 @@ import (
 )
 
 var (
-	flagSince         string
-	flagAll           bool
-	flagDisplayWeekly bool
-	flagInvoicePeriod bool
+	flagSince           string
+	flagAll             bool
+	flagDisplayWeekly   bool
+	flagDisplayCombined bool
+	flagInvoicePeriod   bool
 )
 
 func runLogCmd(cmd *cobra.Command, args []string) error {
@@ -85,6 +86,9 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 			display.PrintWeeklyLogEntryTable(byWeek)
 			fmt.Println()
 		}
+	} else if flagDisplayCombined {
+		combinedEntries := model.CombineLogEntriesByProject(entries)
+		display.PrintCombinedLogEntryTable(combinedEntries)
 	} else {
 		display.PrintLogEntryTable(entries)
 	}
@@ -105,4 +109,5 @@ func init() {
 	logCmd.Flags().StringVar(&flagSince, "since", "last week", "Only show logs since the given date")
 	logCmd.Flags().BoolVarP(&flagInvoicePeriod, "invoice-period", "i", false, "Only show logs for the current invoice period (assumes bimonthly)")
 	logCmd.Flags().BoolVarP(&flagDisplayWeekly, "weekly", "w", false, "Show weekly aggregated logs")
+	logCmd.Flags().BoolVarP(&flagDisplayCombined, "combined", "c", false, "Show combined project logs")
 }
