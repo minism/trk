@@ -4,9 +4,9 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package main
 
 import (
-	"github.com/minism/trk/cmd"
+	"github.com/minism/trk/cmd/root"
 )
 
 func main() {
-	cmd.Execute()
+	root.Execute()
 }

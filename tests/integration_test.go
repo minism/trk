@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/minism/trk/cmd"
+	"github.com/minism/trk/cmd/root"
 	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/util"
 	"github.com/rogpeppe/go-internal/testscript"
@@ -20,7 +20,7 @@ func TestMain(m *testing.M) {
 
 	os.Exit(testscript.RunMain(m, map[string]func() int{
 		"trk": func() int {
-			cmd.Execute()
+			root.Execute()
 			return 0
 		},
 	}))

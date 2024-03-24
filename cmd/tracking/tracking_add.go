@@ -1,12 +1,13 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 */
-package cmd
+package tracking
 
 import (
 	"fmt"
 	"strconv"
 
+	"github.com/minism/trk/cmd/shared"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
 	"github.com/minism/trk/internal/util"
@@ -14,11 +15,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	flagMessage string
-	flagDate    string
-	flagReplace bool
-)
+func MakeTrackingAddCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "add <project> <num_hours>",
+		Short: "Adds time tracking hours to a project",
+		Run:   shared.WrapCommand(runAddCmd),
+	}
+
+	addSharedArgs(cmd)
+
+	return cmd
+}
 
 func runAddCmd(cmd *cobra.Command, args []string) error {
 	var err error
@@ -78,41 +85,4 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	return nil
-}
-
-func runSetCommand(cmd *cobra.Command, args []string) error {
-	flagReplace = true
-	addCmd.Run(cmd, args)
-	return nil
-}
-
-// addCmd represents the add command
-var addCmd = &cobra.Command{
-	Use:   "add <project> <num_hours>",
-	Short: "Adds time tracking hours to a project",
-	Run:   wrapCommand(runAddCmd),
-}
-
-// set is just an alias for add with --replace set to true.
-var setCmd = &cobra.Command{
-	Use:   "set <project> <num_hours>",
-	Short: "Sets time tracking hours for a particular day",
-	Long: `Sets time tracking hours for a particular day.
-
-This is an alias for "trk add --replace"
-`,
-	Run: wrapCommand(runSetCommand),
-}
-
-func init() {
-	rootCmd.AddCommand(addCmd)
-	rootCmd.AddCommand(setCmd)
-
-	// Add flags to both commands, make set an alias with an override.
-	for _, cmd := range []*cobra.Command{addCmd, setCmd} {
-		cmd.Args = cobra.ExactArgs(2)
-		cmd.Flags().StringVarP(&flagDate, "date", "d", "", "Update log for the given day, default to today.")
-		cmd.Flags().StringVarP(&flagMessage, "message", "m", "", "Provide a message along with the entry.")
-		cmd.Flags().BoolVar(&flagReplace, "replace", false, "Replaces all previous entries for that day.")
-	}
 }
