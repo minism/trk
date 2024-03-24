@@ -112,6 +112,7 @@ Features/TODO
     - when you list invoices, mark any as "stale/dirty" e.g. the logged hours does not match anymore and it
       needs to be regenerated.
     - prohibit regenerating sent/paid invoices unless a force flag is given.
+  - merge notes for combined log entries.
 
 Issues
 
