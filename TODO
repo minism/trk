@@ -78,6 +78,9 @@ P2 CLI
     - trk git push: Alias for git push
     - trk git pull: Alias for git pull
 
+  trk start/stop: Real-time time tracking
+  
+
 trk data directory structure:
 
   - ~/.trk

@@ -1,6 +1,6 @@
 # trk
 
-Lightweight time tracking and invoicing tool for freelancers/contractors
+Lightweight terminal-based time tracking and invoicing tool for freelancers and contractors, written in golang.
 
 NOTE: This tool is very early in development still and will have an unstable API/data format.
 
