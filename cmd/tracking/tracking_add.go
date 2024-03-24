@@ -56,10 +56,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	// Update log entry.
-	entry, err := core.MakeLogEntry(project, date, hours, flagMessage)
-	if err != nil {
-		return err
-	}
+	entry := model.MakeLogEntry(project, date, hours, flagMessage)
 	allDayEntries, err := core.AppendLogEntry(entry, flagReplace)
 	if err != nil {
 		return err

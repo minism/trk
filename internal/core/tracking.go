@@ -1,21 +1,10 @@
 package core
 
 import (
-	"time"
-
 	"github.com/minism/trk/internal/storage"
 	"github.com/minism/trk/internal/util"
 	"github.com/minism/trk/pkg/model"
 )
-
-func MakeLogEntry(project model.Project, date time.Time, hours float64, note string) (model.LogEntry, error) {
-	return model.LogEntry{
-		Project: project,
-		Date:    date,
-		Hours:   hours,
-		Note:    note,
-	}, nil
-}
 
 // Retrieve sorted log entries for a given project.
 func FetchLogEntriesForProject(project model.Project) ([]model.LogEntry, error) {

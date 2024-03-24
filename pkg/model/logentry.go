@@ -16,6 +16,15 @@ type LogEntry struct {
 	Note    string
 }
 
+func MakeLogEntry(project Project, date time.Time, hours float64, note string) LogEntry {
+	return LogEntry{
+		Project: project,
+		Date:    date,
+		Hours:   hours,
+		Note:    note,
+	}
+}
+
 func FilterLogEntriesByDay(entries []LogEntry, date time.Time) []LogEntry {
 	matches := make([]LogEntry, 0)
 	for _, entry := range entries {
