@@ -39,6 +39,7 @@ Initialize the data folder:
 - Git for persistence/syncing layer
 - Friendly CLI with natural language parsing terms such as "yesterday"
 - Per-project and global views
+- Generate and render HTML/PDF invoices to send to clients
 - CLI and TUI both communicate through a core API shell
 
 # Planned features - not yet implemented
