@@ -49,7 +49,7 @@ func runSummaryCmd(cmd *cobra.Command, args []string) error {
 			"You have %s uninvoiced hours totaling %s:\n\n",
 			display.FormatFloatMinDecimal(uninvoicedHours),
 			display.ReadableMoney(uninvoicedTotal))
-		display.PrintLogEntryTable(uninvoicedEntries)
+		display.PrintCombinedLogEntryTable(model.CombineLogEntriesByProject(uninvoicedEntries))
 	}
 
 	return nil
