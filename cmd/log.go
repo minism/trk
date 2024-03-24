@@ -87,6 +87,7 @@ func runLogCmd(cmd *cobra.Command, args []string) error {
 			fmt.Println()
 		}
 	} else if flagDisplayCombined {
+		// TODO: Handle both -c and -w
 		combinedEntries := model.CombineLogEntriesByProject(entries)
 		display.PrintCombinedLogEntryTable(combinedEntries)
 	} else {
