@@ -40,6 +40,7 @@ func MakeLogCommand() *cobra.Command {
 			// TODO: Throw combination incompatibility errors here.
 			from := util.MinDate
 			to := util.MaxDate
+			// TODO: Weekly should work with --since, but snap to beginning of that week.
 			if flagAll || flagDisplayWeekly {
 				from = util.MinDate
 			} else if len(flagDate) > 0 {

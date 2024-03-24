@@ -101,18 +101,21 @@ Features/TODO
   - Invoices should show as dirty or something, when we've generated them but changed the hours.
     Then you should be able to regenerate an invoice, but if its marked as sent, throw warning.
   - Print invoice yaml location when written
-  - Do not allow modification to hours for finalized invoice periods.
-    - Warning for sent invoice periods
-  - trk invoice list should only show generated invoices
-    - but an option -a for 'all' should also show the current/pending invoice?
   - invoice periods:
    - monthly,
    - bimonthly
    - adhoc/rolling - arbitrary period, when you run `generate` it includes all days since the last invoice.
+  - invoice protection:
+    - if you modify time tracking entries for an interval that an invoice contains, display a warning.
+      - if the invoice is already sent or paid, throw an error instead of warning
+      - but this can be overridden with a --force flag
+    - when you list invoices, mark any as "stale/dirty" e.g. the logged hours does not match anymore and it
+      needs to be regenerated.
+    - prohibit regenerating sent/paid invoices unless a force flag is given.
 
 Issues
 
   - Date parsing issues
     - 3/5 doesnt work but 2024/3/5 does, we can probably try to just add this.
   - Error on incompatible flags
-    - trk log -w --since
+    - trk log -d --since
