@@ -1,0 +1,23 @@
+exec trk init
+
+# Add some hours for the last invoice period.
+exec trk add example-project 5 -d 'feb 25'
+
+# Generate an invoice
+exec trk invoice generate
+stdout 'Generated 1'
+
+# The invoice isn't sent or paid yet
+exec trk invoice list
+! stdout 'Sent'
+
+# Mark the invoice as sent.
+exec trk invoice update example-project-1 --sent
+stdout 'Sent'
+
+# Mark the invoice as paid.
+exec trk invoice update example-project-1 --paid
+stdout 'Paid'
+
+exec trk invoice list
+stdout 'Paid'

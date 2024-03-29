@@ -80,6 +80,34 @@ func DeleteProjectInvoiceById(id model.ProjectInvoiceId) error {
 	return storage.SaveInvoices(pi.Project, updatedInvoices)
 }
 
+func UpdateProjectInvoice(updatedInvoice model.ProjectInvoice) error {
+	invoices, err := storage.LoadInvoices(updatedInvoice.Project)
+	if err != nil {
+		return err
+	}
+
+	// Update the invoice in the list of all invoices.
+	updated := false
+	for i, invoice := range invoices {
+		if invoice.Id == updatedInvoice.Invoice.Id {
+			invoices[i] = updatedInvoice.Invoice
+			updated = true
+			break
+		}
+	}
+	if !updated {
+		return fmt.Errorf("%w: %s", ErrInvoiceNotFound, updatedInvoice.Id())
+	}
+
+	// Save it back to storage.
+	err = storage.SaveInvoices(updatedInvoice.Project, invoices)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GenerateNewInvoicesForProject(project model.Project) ([]model.ProjectInvoice, error) {
 	// Load entries and group by bimonthly.
 	entries, err := FetchLogEntriesForProject(project)

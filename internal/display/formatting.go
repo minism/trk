@@ -13,7 +13,7 @@ func ReadableDate(date time.Time) string {
 }
 
 func ReadableDateWithoutColor(date time.Time) string {
-	return date.Format("Monday, January 2")
+	return date.Format("Monday, January 2 2006")
 }
 
 func ReadableYearMonth(date time.Time) string {

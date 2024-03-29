@@ -14,6 +14,7 @@ func MakeInvoiceCommand() *cobra.Command {
 	cmd.AddCommand(
 		MakeInvoiceListCommand(),
 		MakeInvoiceGenerateCommand(),
+		MakeInvoiceUpdateCommand(),
 		MakeInvoiceDeleteCommand(),
 	)
 
