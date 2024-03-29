@@ -108,7 +108,7 @@ func UpdateProjectInvoice(updatedInvoice model.ProjectInvoice) error {
 	return nil
 }
 
-func GenerateNewInvoicesForProject(project model.Project) ([]model.ProjectInvoice, error) {
+func GenerateNewInvoicesForProject(project model.Project, upToDate time.Time) ([]model.ProjectInvoice, error) {
 	// Load entries and group by bimonthly.
 	entries, err := FetchLogEntriesForProject(project)
 	if err != nil {
@@ -116,7 +116,7 @@ func GenerateNewInvoicesForProject(project model.Project) ([]model.ProjectInvoic
 	}
 
 	// We only want to consider entries for finished invoice periods.
-	endDate := util.GetPrevBimonthlyDate(util.TrkToday())
+	endDate := util.GetPrevBimonthlyDate(upToDate)
 	entries = model.FilterLogEntriesBetween(entries, util.MinDate, endDate)
 
 	// Group invoices bimonthly.

@@ -7,7 +7,12 @@ import (
 	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/util"
 	"github.com/spf13/cobra"
+)
+
+var (
+	flagFutureDate string
 )
 
 func MakeInvoiceGenerateCommand() *cobra.Command {
@@ -27,7 +32,17 @@ func MakeInvoiceGenerateCommand() *cobra.Command {
 					continue
 				}
 
-				invoices, err := core.GenerateNewInvoicesForProject(project)
+				// By default we generate invoices for periods finished before today,
+				// but the user can specify a future date if they really want to.
+				upToDate := util.TrkToday()
+				if flagFutureDate != "" {
+					upToDate, err = util.ParseNaturalDate(flagFutureDate)
+					if err != nil {
+						return err
+					}
+				}
+
+				invoices, err := core.GenerateNewInvoicesForProject(project, upToDate)
 				if err != nil {
 					return err
 				}
@@ -42,6 +57,8 @@ func MakeInvoiceGenerateCommand() *cobra.Command {
 			return nil
 
 		})}
+
+	cmd.Flags().StringVar(&flagFutureDate, "future-date", "", "Generate invoices up to the given future date rather than using today.")
 
 	return cmd
 }
