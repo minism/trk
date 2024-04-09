@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/minism/trk/cmd/git"
 	"github.com/minism/trk/cmd/initialize"
 	"github.com/minism/trk/cmd/invoice"
 	cmdlog "github.com/minism/trk/cmd/log"
@@ -46,6 +47,9 @@ func init() {
 		tracking.MakeTrackingAddCommand(),
 		tracking.MakeTrackingSetCommand(),
 		version.MakeVersionCommand(),
+		git.MakeGitPassthroughCommand(),
+		git.MakeGitPushCommand(),
+		git.MakeGitPullCommand(),
 	)
 
 	RootCmd.PersistentFlags().StringVarP(&shared.FlagProject, "project", "p", "", "Filter by a particular project ID (fuzzy match).")
