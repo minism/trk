@@ -38,7 +38,7 @@ func FilterLogEntriesByDay(entries []LogEntry, date time.Time) []LogEntry {
 func FilterLogEntriesBetween(entries []LogEntry, from time.Time, to time.Time) []LogEntry {
 	matches := make([]LogEntry, 0)
 	for _, entry := range entries {
-		if (entry.Date.After(from) || entry.Date.Equal(from)) && entry.Date.Before(to) {
+		if IsLogEntryInPeriod(entry, from, to) {
 			matches = append(matches, entry)
 		}
 	}
@@ -48,11 +48,15 @@ func FilterLogEntriesBetween(entries []LogEntry, from time.Time, to time.Time) [
 func ExcludeLogEntriesBetween(entries []LogEntry, from time.Time, to time.Time) []LogEntry {
 	excluded := make([]LogEntry, 0)
 	for _, entry := range entries {
-		if entry.Date.Before(from) || entry.Date.Equal(to) || entry.Date.After(to) {
+		if !IsLogEntryInPeriod(entry, from, to) {
 			excluded = append(excluded, entry)
 		}
 	}
 	return excluded
+}
+
+func IsLogEntryInPeriod(entry LogEntry, from time.Time, to time.Time) bool {
+	return (entry.Date.After(from) || entry.Date.Equal(from)) && entry.Date.Before(to)
 }
 
 func GroupLogEntriesByProject(entries []LogEntry) map[string][]LogEntry {
@@ -106,6 +110,38 @@ func GroupLogEntriesByBimonthly(entries []LogEntry) *orderedmap.OrderedMap[int64
 			ret.Set(key, append(val, entry))
 		}
 	}
+	return ret
+}
+
+// Keyed by invoice ID.
+// Note - entries are assumed to be sorted already.
+func GroupLogEntriesByInvoicePeriods(entries []LogEntry, invoices []Invoice) *orderedmap.OrderedMap[int, []LogEntry] {
+	ret := orderedmap.NewOrderedMap[int, []LogEntry]()
+	if len(invoices) < 1 {
+		return ret
+	}
+
+	// Arguable whether sorting both to get N+M is better than N*M to begin with, but it should be.
+	// Could profile it if we really wanted to.
+	SortLogEntries(entries)
+	SortInvoices(invoices)
+	i := 0
+	for _, entry := range entries {
+		for !IsLogEntryInPeriod(entry, invoices[i].StartDate, invoices[i].EndDate) {
+			i++
+			if i >= len(invoices) {
+				return ret
+			}
+		}
+
+		key := invoices[i].Id
+		if val, ok := ret.Get(key); !ok {
+			ret.Set(key, []LogEntry{entry})
+		} else {
+			ret.Set(key, append(val, entry))
+		}
+	}
+
 	return ret
 }
 

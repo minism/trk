@@ -1,18 +1,22 @@
 package model
 
 import (
+	"sort"
 	"time"
 )
 
 type Invoice struct {
+	// Fields stored to disk.
 	Id          int       `yaml:"id"`
 	StartDate   time.Time `yaml:"start_date"`
 	EndDate     time.Time `yaml:"end_date"` // Exclusive
-	HoursLogged float64   `yaml:"hours_logged"`
 	HoursBilled float64   `yaml:"hours_billed"`
 	HourlyRate  float64   `yaml:"hourly_rate"`
 	IsSent      bool      `yaml:"is_sent"`
 	IsPaid      bool      `yaml:"is_paid"`
+
+	// Fields calculated.
+	HoursLogged float64
 }
 
 func (i *Invoice) Status() string {
@@ -36,4 +40,10 @@ func MaybeFindInvoiceByStartDate(invoices []Invoice, date time.Time) *Invoice {
 		}
 	}
 	return nil
+}
+
+func SortInvoices(invoices []Invoice) {
+	sort.SliceStable(invoices, func(i, j int) bool {
+		return invoices[i].StartDate.Before(invoices[j].StartDate)
+	})
 }

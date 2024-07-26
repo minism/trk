@@ -14,6 +14,21 @@ func FetchInvoicesForProject(project model.Project) ([]model.ProjectInvoice, err
 	if err != nil {
 		return nil, err
 	}
+
+	// Calculate the hours logged from log entry data.
+	entries, err := FetchLogEntriesForProject(project)
+	if err != nil {
+		return nil, err
+	}
+	entriesByInvoiceId := model.GroupLogEntriesByInvoicePeriods(entries, invoices)
+	for i, invoice := range invoices {
+		if entries, ok := entriesByInvoiceId.Get(invoice.Id); !ok {
+			invoices[i].HoursLogged = 0
+		} else {
+			invoices[i].HoursLogged = model.GetTotalHours(entries)
+		}
+	}
+
 	return model.MakeProjectInvoices(project, invoices), nil
 }
 
