@@ -4,6 +4,7 @@ import (
 	"github.com/minism/trk/cmd/shared"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/git"
 	"github.com/minism/trk/pkg/model"
 	"github.com/spf13/cobra"
 )
@@ -34,6 +35,11 @@ func MakeInvoiceUpdateCommand() *cobra.Command {
 			}
 
 			err = core.UpdateProjectInvoice(invoice)
+			if err != nil {
+				return err
+			}
+
+			err = git.CommitIfEnabled("Updated invoice %s", invoice.Id())
 			if err != nil {
 				return err
 			}

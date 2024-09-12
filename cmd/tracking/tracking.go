@@ -1,11 +1,6 @@
 package tracking
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/minism/trk/internal/git"
-	"github.com/minism/trk/internal/storage"
 	"github.com/spf13/cobra"
 )
 
@@ -14,20 +9,6 @@ var (
 	flagDate    string
 	flagReplace bool
 )
-
-func commitIfEnabled(format string, args ...any) error {
-	cfg, err := storage.LoadConfig()
-	if err != nil {
-		return err
-	}
-	msg := fmt.Sprintf(format, args...)
-	if cfg.AutoCommit {
-		git.InvokeGitCommand("commit", "-am", msg)
-	} else {
-		log.Print(msg)
-	}
-	return nil
-}
 
 func addSharedArgs(cmd *cobra.Command) {
 	// Add flags to both commands, make set an alias with an override.

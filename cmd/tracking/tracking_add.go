@@ -10,6 +10,7 @@ import (
 	"github.com/minism/trk/cmd/shared"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/git"
 	"github.com/minism/trk/internal/util"
 	"github.com/minism/trk/pkg/model"
 	"github.com/spf13/cobra"
@@ -79,7 +80,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 			display.ReadableHours(total),
 			display.ReadableDate(date))
 	}
-	commitIfEnabled(msg)
+	git.CommitIfEnabled(msg)
 
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/minism/trk/internal/config"
 	"github.com/minism/trk/internal/core"
 	"github.com/minism/trk/internal/display"
+	"github.com/minism/trk/internal/git"
 	"github.com/minism/trk/internal/util"
 	"github.com/spf13/cobra"
 )
@@ -49,7 +50,11 @@ func MakeInvoiceGenerateCommand() *cobra.Command {
 				if len(invoices) < 1 {
 					continue
 				}
-				fmt.Printf("Generated %d invoices for: %s\n", len(invoices), display.ColorProject(project.ID()))
+				err = git.CommitIfEnabled("Generated %d invoices for: %s\n", len(invoices), display.ColorProject(project.ID()))
+				if err != nil {
+					return err
+				}
+
 				display.PrintProjectInvoicesTable(invoices)
 				fmt.Println()
 			}

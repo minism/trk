@@ -1,10 +1,13 @@
 package git
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"os/exec"
 
 	"github.com/minism/trk/internal/config"
+	"github.com/minism/trk/internal/storage"
 )
 
 func CheckGitExists() bool {
@@ -22,4 +25,18 @@ func InvokeGitCommand(userArg ...string) error {
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
 	return c.Run()
+}
+
+func CommitIfEnabled(format string, args ...any) error {
+	cfg, err := storage.LoadConfig()
+	if err != nil {
+		return err
+	}
+	msg := fmt.Sprintf(format, args...)
+	if cfg.AutoCommit {
+		InvokeGitCommand("commit", "-am", msg)
+	} else {
+		log.Print(msg)
+	}
+	return nil
 }
