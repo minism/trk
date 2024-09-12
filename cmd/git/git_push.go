@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/minism/trk/cmd/shared"
+	"github.com/minism/trk/internal/git"
 	"github.com/spf13/cobra"
 )
 
@@ -16,10 +17,10 @@ func MakeGitPushCommand() *cobra.Command {
 	This is an alias for "trk git push"
 	`,
 		Run: shared.WrapCommand(func(cmd *cobra.Command, args []string) error {
-			if !checkGitExists() {
+			if !git.CheckGitExists() {
 				return errors.New("unable to locate git on your system")
 			}
-			return invokeGitCommand("push")
+			return git.InvokeGitCommand("push")
 		}),
 	}
 

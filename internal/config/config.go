@@ -10,8 +10,9 @@ const (
 )
 
 type TrkConfig struct {
-	TimeZone *time.Location  `yaml:"time_zone"`
-	Projects []ProjectConfig `yaml:"projects"`
+	TimeZone   *time.Location  `yaml:"time_zone"`
+	Projects   []ProjectConfig `yaml:"projects"`
+	AutoCommit bool            `yaml:"auto_commit"`
 }
 
 type ProjectConfig struct {

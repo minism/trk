@@ -64,22 +64,22 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 
 	// Display change and total.
 	total := model.GetTotalHours(allDayEntries)
+	var msg string
 	if total == hours {
-		fmt.Printf(
-			"Logged %s to project %s for %s\n",
+		msg = fmt.Sprintf(
+			"Logged %s to project %s for %s",
 			display.ReadableHours(hours),
 			display.ColorProject(project.ID()),
 			display.ReadableDate(date))
 	} else {
-		fmt.Printf(
-			"Logged %s to project %s\n",
+		msg = fmt.Sprintf(
+			"Logged %s to project %s\nYou have %s total for %s",
 			display.ReadableHours(hours),
-			display.ColorProject(project.ID()))
-		fmt.Printf(
-			"\nYou have %s total for %s\n",
+			display.ColorProject(project.ID()),
 			display.ReadableHours(total),
 			display.ReadableDate(date))
 	}
+	commitIfEnabled(msg)
 
 	return nil
 }

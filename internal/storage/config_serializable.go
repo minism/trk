@@ -7,16 +7,18 @@ import (
 )
 
 type trkConfigSerializable struct {
-	TimeZone string                 `yaml:"time_zone"`
-	Projects []config.ProjectConfig `yaml:"projects"`
+	AutoCommit bool                   `yaml:"auto_commit"`
+	TimeZone   string                 `yaml:"time_zone"`
+	Projects   []config.ProjectConfig `yaml:"projects"`
 }
 
 // TODO: Can we just use a custom yaml marshal function rather than these
 // transformations?
 func configToSerializable(config config.TrkConfig) (trkConfigSerializable, error) {
 	return trkConfigSerializable{
-		TimeZone: config.TimeZone.String(),
-		Projects: config.Projects,
+		AutoCommit: config.AutoCommit,
+		TimeZone:   config.TimeZone.String(),
+		Projects:   config.Projects,
 	}, nil
 }
 
@@ -26,7 +28,8 @@ func configFromSerializable(sConfig trkConfigSerializable) (config.TrkConfig, er
 		return config.TrkConfig{}, err
 	}
 	return config.TrkConfig{
-		TimeZone: loc,
-		Projects: sConfig.Projects,
+		AutoCommit: sConfig.AutoCommit,
+		TimeZone:   loc,
+		Projects:   sConfig.Projects,
 	}, nil
 }
