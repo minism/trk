@@ -46,6 +46,7 @@ func init() {
 		summary.MakeSummaryCommand(),
 		tracking.MakeTrackingAddCommand(),
 		tracking.MakeTrackingSetCommand(),
+		tracking.MakeTrackingClearCommand(),
 		version.MakeVersionCommand(),
 		git.MakeGitPassthroughCommand(),
 		git.MakeGitPushCommand(),

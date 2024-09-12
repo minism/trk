@@ -23,6 +23,7 @@ func MakeTrackingAddCommand() *cobra.Command {
 		Run:   shared.WrapCommand(runAddCmd),
 	}
 
+	cmd.Args = cobra.ExactArgs(2)
 	addSharedArgs(cmd)
 
 	return cmd
